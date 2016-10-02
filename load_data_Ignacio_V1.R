@@ -2,6 +2,7 @@
 #
 # This script loads csv downloaded from ://data.worldbank.org/topic
 # makes years as a feature and concatenates them together into one data.frame
+# then selects a good combination of years/countries without missing values
 
 # Load the WDI, readr and dplyr libraries
 library(WDI)
@@ -20,7 +21,6 @@ poprur.df= read_csv("./data/%_rural_population_60_15.csv")
 popur.df= read_csv("./data/%_urban_population_60_15.csv")
 co2.df= read_csv("./data/CO2_emisions_60_11.csv")
 kmsqr.df= read_csv("./data/km_square_61_15.csv")
-meth.df= read_csv("./data/methane_emisions_70_12.csv")
 popgrowth.df= read_csv("./data/population_growth_60_15.csv")
 poptotal.df= read_csv("./data/population_total_60_15.csv")
 elecoutput.df= read_csv("./data/renew_elec_output_90_12.csv")
@@ -29,13 +29,17 @@ energy.df= read_csv("./data/energy_use_kg_oil.csv")
 gdp_growth.df= read_csv("./data/GDP_growth_annual%.csv")
 gdp.df= read_csv("./data/GDP.csv")
 
+# put all data.frames into a list
 all.list <- list(san.df,ag.df,pop0.df,pop15.df,poprur.df,popur.df,co2.df,kmsqr.df,
-                 meth.df,popgrowth.df,poptotal.df,elecoutput.df,mort5.df,energy.df,
+                 popgrowth.df,poptotal.df,elecoutput.df,mort5.df,energy.df,
                  gdp_growth.df,gdp.df)
 
+# chech: loop the list to print first observatinos
 for (i in all.list){print(head(i))}
 
+# Join all data.frames into a single data.frame
 wdi.df = data.frame()
+# loop the list to set year and value as a column and concatenate
 for (aux.df in all.list){
   # Rename a few variable
   aux.df <- rename(aux.df, country.name = `Country Name`, country.code = `Country Code`,indicator.name = `Indicator Name`,indicator.code = `Indicator Code`)
@@ -69,29 +73,47 @@ str(wdi.df$year)
 levels(wdi.df$year)
 summary(wdi.df$year)
 
-# Display the structure of the dataframe
+# Some final check on our data.frame:
 str(wdi.df)
-head(wdi.df,20)
+head(wdi.df,4)
+sample_n(wdi.df, size=10)
+options(dplyr.width = Inf) # forces dplyr to show all columns
+slice(wdi.df, 1000:1020)
+filter(wdi.df, year==1995)
+
+# Now let's check missing values to select a subset of years (and countries?) 
+
+# Display the years sorted by the percent of missing values for all measurements for that year
+wdi.df %>%  group_by(year) %>%  summarize(count=n(), cnt.missing=sum(is.na(value)), pct.missing= 100*cnt.missing/count) %>% 
+  arrange(year) %>%  select(year, pct.missing) %>%   print(n=100)
+
+# same for countries
+wdi.df %>%  group_by(country.code) %>%  summarize(count=n(), cnt.missing=sum(is.na(value)), pct.missing= 100*cnt.missing/count) %>% 
+  arrange(country.code) %>%  select(country.code, pct.missing) %>%  arrange(desc(pct.missing)) %>% print(n=250)
+
+# We'll also remove column year=x61 and country.code=INX with 100% missing values
+wdi.df <- filter(wdi.df, year!="X61")
+wdi.df <- filter(wdi.df, country.code!="INX")
 
 
-# Display the years sorted by the percent of missing values
-# for all measurements for that year
-  wdi.df %>%
-    group_by(year) %>%
-    summarize(count          = n(),
-              cnt.missing    = sum(is.na(value)),
-              pct.missing    = 100*cnt.missing/count) %>%
-    arrange(year) %>%
-    select(year, pct.missing) %>%
-    print(n=100)
-  
-# Now determine a range of years and a collection of indicator codes
-# to use in creating your data set. Use two criteria: 
-# 1) There shouldn't be too many missing values for any indicator code
-# 2) You are telling a story by investigating the data set. 
-#    Your data should be interesting so you have something 
-#    to analyze, summarize, investigate and write about. 
+# Let's create wdi.dfv2 20 years and 134 countries WITHOUT missing values!!!!!!!!!!!!!!!! :)
+wdi.dfv2 <- filter(wdi.df, year>1991& year<2012) 
+wdi.dfv2 %>%  group_by(country.code) %>%  summarize(count=n(), cnt.missing=sum(is.na(value)), pct.missing= 100*cnt.missing/count) %>% 
+  arrange(country.code) %>%  select(country.code, pct.missing) %>%  arrange(desc(pct.missing)) %>% print(n=270) -> countries.mv
+# Keep countries with 0% missing values
+country_keep = (filter(countries.mv, pct.missing == 0))$country.code
+wdi.dfv2 <- filter(wdi.dfv2, country.code %in% country_keep)
+# check missing values again
+wdi.dfv2 %>%  group_by(year) %>%  summarize(count=n(), cnt.missing=sum(is.na(value)), pct.missing= 100*cnt.missing/count) %>% 
+  arrange(year) %>%  select(year, pct.missing) %>%   print(n=100)
+# same for countries
+wdi.dfv2 %>%  group_by(country.code) %>%  summarize(count=n(), cnt.missing=sum(is.na(value)), pct.missing= 100*cnt.missing/count) %>% 
+  arrange(country.code) %>%  select(country.code, pct.missing) %>%  arrange(desc(pct.missing)) %>% print(n=250)
 
-
-
-
+# there are other combinations which have more years and countries but with some missing values. 
+# Let's save our final data.frame wdi.dfv2 as a csv file
+str(wdi.dfv2)
+wdi.dfv2$country.code = factor(wdi.dfv2$country.code) #refactor
+wdi.dfv2$year = factor(wdi.dfv2$year, ordered=TRUE) #refactor
+str(wdi.dfv2)
+write.csv(file=("./data/wdi.df.csv"), x=wdi.dfv2)
