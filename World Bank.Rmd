@@ -1,0 +1,70 @@
+---
+title: "World Bank Data Analysis"
+author: "Constantin Rusu"
+date: "September 26, 2016"
+output: html_document
+---
+<center><img src="http://youth4c.org/wp-content/uploads/2015/03/The-World-Bank-logo.png" width="500"></img></center><br>
+
+#INTRODUCTION
+The World Bank is an international organization that aims to defeat poverty in the world (specifically in countries with low to medium income) through means of training, development and loan offerings to countries so that they may "help countries help themselves"[1]. Started in 1944 as an intiative after World War II to rebuild a torn Europe (where the International Bank for Reconstruction and Development was also started), the World Bank currently offers several financial products and services such as:
+<ul>
+  <li>low interest loans</li>
+  <li>low interest credits</li>
+  <li>grants for developing countries</li>
+  <li>financing through trust fund partnerships</li>
+</ul>
+The organization focuses on delivering measurable results and in order to do that it leads a powerful intiative for open development. This consists of free access to tools and data that spans over more than 50 years for several macroeconomic and microeconomic factors for countries from all over the globe.
+
+#OBJECTIVE(S)
+The world has seen some major shifts in the landscapes of politics, economy and society in the past 10 to 20 years. From the tragic events of September 11 in 2001 and the financial crysis of 2008 to the increasing gap in income equality and the rise of the internet as a universal digital medium, the world that has rebuilt after the second World War is anything if not a dynamic one. Such events change the world we know a little more every day. Social-economic interconnectedness (also known as economic globalization) has allowed for these changes to more easily scatter and disseminate all over the world so much so that it is now perfectly reasonable to expect a piece of news one night to result in protests being organized in several places around the world by the break of dawn the following day.<br><br>
+Forces of change such as the ones presented so far are, however, unexpected and hard to predict. If there is one force of world change that has been relatively consistent since the beginning of mankind it would have to be: population growth. Despite plagues and wars attacking the size of the population for humans living on Earth this is one indicator that has been fairly consistent in its upwards trend. Data from the Population Reference Bureau [2] has attempted to model an answer for the question "How many people have ever lived on Earth?" and started by mapping out the human population (as a best estimate) at a few checkpoint moments throghout human history:
+```{r echo=FALSE}
+setwd("C:/Users/Ross DeWitt/Documents/GitHub/MA799_Project1/world_population")
+read.csv("./Data/popdata.csv")
+```
+The overall goal of this paper is to analyze how population growth impacts other variables such as mortality rate, arable land, CO2 emissions, energy use, GDP growth, etc. or how it relates to any of these variables as well as possibly researching the evolution of such factors across several countries. It is safe to assume that not all countries are impacted by population growth in the same way but, if anything, this creates an opportunity for digging into a topic with a rather large scope and hopefully, interesting insights.<br>
+Other questions we could look to answer might include:
+<ul>
+  <li>Can the growth in CO2 emissions be explained by population growth? If the information is analyzed per capita, does CO2 increase or decrease?</li>
+  <li>How did farmland(as a percentage of land in each country) change over the years and what is the impact population growth has brought in this aspect?</li>
+  <li>Is there a relationship between rural population size and arable land (as a percentage)?</li>
+  <li>What are the countries that present consistent negative GDP growth in the past years?</li>
+  <li>How does the population of 0 to 14 year olds vary against the population aged between 15 and 64?</li>
+  <li>To what extent is mortality rate correlated with CO2 emissions or the use of renewable energy?</li>
+</ul>
+#DATASET DESCRIPTION
+As previously mentioned, The World Bank offers easy access to its publicly available data sets that contain information on a wide array of country indicators for each year where collection of that data was possible. These indicators cover different economic, political, geographical and social metrics that help paint a picture of countries all over the world. 
+
+Considering the aforementioned objectives and scope, for this report we have selected 15 indicators. These are:
+
+.    % Access sanitation facilities (1990 - 2015)
+.    % Agricultural land (1961 - 2013)
+.    % Population 0 to 14 years old (1960 - 2015)
+.    % Population 15 to 64 years old (1960 - 2015)
+.    % Rural population (1960 - 2015)
+.    % Urban population (1960 - 2015) 
+.    Population growth (1960 - 2015)
+.    Population total (1960 - 2015)
+.    % Renewable electricity output (1990 - 2012)
+.    CO2 emisions (1960 - 2011)
+.    Energy use
+.    GDP
+.    GDP annual growth
+.    Surface area
+.    Mortality rate
+
+In order to work properly on the data, we have created a single data set using the following process:
+.    All tables have been merged into a single data set
+.    Years have been placed as a single variable called YEAR whose value is the year under review.
+.    VALUE variable contains the indicator value in the designated year (this way we can have different years' range for each variable)
+.    INDICADOR.CODE variable points out which indicator value in each line belongs with, while COUNTRY.CODE variable indicates the country 
+.    The missing values have been reduced, for this we have eliminated years if the country data was scarce.
+
+In total, we have obtained a dataset with 40,200 rows, on which the respective analysis will be done.
+
+#DATASET PREPARATION
+##References
+[1] Investopedia, http://www.investopedia.com/articles/03/042303.asp<br>
+[2] Population Reference Bureau, http://www.prb.org/Publications/Articles/2002/HowManyPeopleHaveEverLivedonEarth.aspx
+
