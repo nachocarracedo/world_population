@@ -149,6 +149,18 @@ financing through trust fund partnerships
 <div id="objectives" class="section level1">
 <h1>OBJECTIVE(S)</h1>
 <p>The world has seen some major shifts in the landscapes of politics, economy and society in the past 10 to 20 years. From the tragic events of September 11 in 2001 and the financial crysis of 2008 to the increasing gap in income equality and the rise of the internet as a universal digital medium, the world that has rebuilt after the second World War is anything if not a dynamic one. Such events change the world we know a little more every day. Social-economic interconnectedness (also known as economic globalization) has allowed for these changes to more easily scatter and disseminate all over the world so much so that it is now perfectly reasonable to expect a piece of news one night to result in protests being organized in several places around the world by the break of dawn the following day.<br><br> Forces of change such as the ones presented so far are, however, unexpected and hard to predict. If there is one force of world change that has been relatively consistent since the beginning of mankind it would have to be: population growth. Despite plagues and wars attacking the size of the population for humans living on Earth this is one indicator that has been fairly consistent in its upwards trend. Data from the Population Reference Bureau [2] has attempted to model an answer for the question “How many people have ever lived on Earth?” and started by mapping out the human population (as a best estimate) at a few checkpoint moments throghout human history:</p>
+<pre><code>##           Year    Population Births.per.1.000 Births.Between.Benchmarks
+## 1  50,000 B.C.             2                -                         -
+## 2    8000 B.C.     5,000,000               80             1,137,789,769
+## 3       1 A.D.   300,000,000               80            46,025,332,354
+## 4         1200   450,000,000               60            26,591,343,000
+## 5         1650   500,000,000               60            12,782,002,453
+## 6         1750   795,000,000               50             3,171,931,513
+## 7         1850 1,265,000,000               40             4,046,240,009
+## 8         1900 1,656,000,000               40             2,900,237,856
+## 9         1950 2,516,000,000            31-38             3,390,198,215
+## 10        1995 5,760,000,000               31             5,427,305,000
+## 11        2011 6,987,000,000               23             2,130,327,622</code></pre>
 <p>The overall goal of this paper is to study population growth and analyze how this growth impacts other variables such as mortality rate, arable land, CO2 emissions, energy use, GDP growth, etc. or how it relates to any of these variables as well as possibly researching the evolution of such factors across several countries. It is safe to assume that not all countries are impacted by population growth in the same way but, if anything, this creates an opportunity for digging into a topic with a rather large scope and hopefully, interesting insights.<br> Other than studying population growth from different angles we could also look to answer questions that might include:</p>
 <ul>
 <li>
@@ -226,7 +238,7 @@ library(dplyr)
 library(tidyr)
 
 # Read each one of the indicators into a data frame from the downloaded CSV files
-setwd(&quot;C:/Users/carrai1/Desktop/Master/MA402_Data_Science/Assigment_1/&quot;)
+setwd(&quot;C:/Users/Nestor/Documents/MSBA/3 FALL 2016/MA402/Project/world_population-master&quot;)
 san.df = read_csv(&quot;./data/%_access_sanitation_facilities_90_15.csv&quot;)
 ag.df = read_csv(&quot;./data/%_agricultural_land_61_13.csv&quot;)
 pop0.df = read_csv(&quot;./data/%_population_0_14_60_15.csv&quot;)
