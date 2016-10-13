@@ -173,6 +173,89 @@ write.csv(file=("./data/wdi.df.csv"), x=wdi.dfv2)
 str(wdi.dfv2)
 ```
 
+The second part of the script removes a set of years and countries in order to have a final data.frame with no missing values. After studying the data we crafted a final data.frame that has 134 countries and 20 years (1992 -2011). Note that we can modify this second part of script to get different final data.frames if needed.
+
+```{r, warning=FALSE,message=FALSE}
+# Remove column year=x61 and country.code=INX with 100% missing values
+wdi.df <- filter(wdi.df, year!="X61")
+wdi.df <- filter(wdi.df, country.code!="INX")
+
+# Create wdi.dfv2 20 years and 134 countries WITHOUT missing values
+wdi.dfv2 <- filter(wdi.df, year>1991& year<2012) 
+countries.mv <- wdi.dfv2 %>%  group_by(country.code) %>%  summarize(count=n(), cnt.missing=sum(is.na(value)), pct.missing= 100*cnt.missing/count) %>% 
+  arrange(country.code) %>%  select(country.code, pct.missing) %>%  arrange(desc(pct.missing))
+# Keep countries with 0% missing values
+country_keep = (filter(countries.mv, pct.missing == 0))$country.code
+wdi.dfv2 <- filter(wdi.dfv2, country.code %in% country_keep)
+
+# check % missing values for each year
+wdi.dfv2 %>%  group_by(year) %>%  summarize(count=n(), cnt.missing=sum(is.na(value)), pct.missing= 100*cnt.missing/count) %>% 
+  arrange(year) %>%  select(year, pct.missing) %>%   print(n=100)
+# check % missing values for each country
+wdi.dfv2 %>%  group_by(country.code) %>%  summarize(count=n(), cnt.missing=sum(is.na(value)), pct.missing= 100*cnt.missing/count) %>% 
+  arrange(country.code) %>%  select(country.code, pct.missing) %>%  arrange(desc(pct.missing)) %>% print(n=250)
+
+# Save  final data.frame wdi.dfv2 as a csv file
+wdi.dfv2$country.code = factor(wdi.dfv2$country.code) #refactor
+wdi.dfv2$year = factor(wdi.dfv2$year, ordered=TRUE) #refactor
+write.csv(file=("./data/wdi.df.csv"), x=wdi.dfv2)
+# check structure of final data.frame
+str(wdi.dfv2)
+```
+
+
+#VARIABLE SUMMARIES
+
+```{r, echo=FALSE, warning=FALSE,message=FALSE}
+# Read dataframe of wdi.df and drop index column
+setwd("C:/Users/carrai1/Desktop/Master/MA402_Data_Science/Assigment_1/")
+wdi.df = read_csv("./data/wdi.df.csv")
+drops='X1'
+wdi.df = wdi.df[ , !(names(wdi.df) %in% drops)]
+options(scipen=999) # disable scientific notation. Easiear to read
+options(dplyr.width = Inf) # print all columns
+```
+
+
+First, let's check the number of unique values for each of our columns (year, code, country):
+
+```{r, warning=FALSE,message=FALSE}
+wdi.df %>% summarise(number_of_unique_years = n_distinct(year))
+wdi.df %>% summarise(number_of_unique_ind = n_distinct(indicator.code))
+wdi.df %>% summarise(number_of_unique_countries = n_distinct(country.code))
+```
+
+
+Next, we'll calculate the mean, median, standard deviation, mininum, and maximun of each indicator code. For clarity we'll also add the indicator name:
+
+```{r, warning=FALSE,message=FALSE}
+# get values summary for every indicator (mean, median, min, max, sd)
+wdi.df %>% group_by(indicator.name, indicator.code) %>% summarise(mean=round(mean(value), 2), median=round(median(value), 2), sd=round(sd(value), 2),
+                                                                  max=round(max(value), 2),min=round(min(value), 2))  %>% print(n=)
+```
+
+
+We'll calculate the same statistics for each indicator code as above but this time we'll show the statistics for every year:
+
+```{r, warning=FALSE,message=FALSE}
+# get values summary for every year/indicator (mean, median, min, max, sd)
+wdi.df %>% group_by(year,indicator.code ) %>% summarise(mean=round(mean(value), 2), median=round(median(value), 2), sd=round(sd(value), 2),
+                                                                  max=round(max(value), 2),min=round(min(value), 2))  -> summary.year.code.df
+for (y in unique(summary.year.code.df$year)){summary.year.code.df %>% filter(year == y) %>% print()}
+```
+
+
+And now for every country:
+
+```{r, warning=FALSE,message=FALSE}
+# get values summary for every country/indicator (mean, median, min, max, sd)
+wdi.df %>% group_by(country.name,indicator.code) %>% summarise(mean=round(mean(value), 2), median=round(median(value), 2), sd=round(sd(value), 2),
+                                                                  max=round(max(value), 2),min=round(min(value), 2)) -> summary.country.code.df 
+for (c in unique(summary.country.code.df$country.name)){summary.country.code.df %>% filter(country.name == c) %>% print()}
+```
+
+
+
 
 ##References
 [1] Investopedia, http://www.investopedia.com/articles/03/042303.asp<br>
