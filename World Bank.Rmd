@@ -29,7 +29,7 @@ The overall goal of this paper is to study population growth and analyze how thi
 Other than studying population growth from different angles we could also look to answer questions that might include:
 
 <ul>
-  <li>Can the growth in CO2 emissions be explained by population growth? If the information is analyzed per capita, does CO2 increase or decrease?</li>
+  <li>Can the growth in CO2 emissions be explained by population growth? If the information is analyzed per capita of certain locations, does CO2 increase or decrease?</li>
   <li>How did farmland(as a percentage of land in each country) change over the years and what is the impact population growth has brought in this aspect?</li>
   <li>Is there a relationship between rural population size and arable land (as a percentage)?</li>
   <li>What are the countries that present consistent negative GDP growth in the past years?</li>
