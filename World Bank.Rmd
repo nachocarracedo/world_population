@@ -25,7 +25,7 @@ Forces of change such as the ones presented so far are, however, unexpected and 
 #setwd("C:/Users/Ross DeWitt/Documents/GitHub/MA799_Project1/world_population")
 #read.csv("./Data/popdata.csv")
 ```
-The overall goal of this paper is to study population growth and analyze how this growth impacts other variables such as mortality rate, arable land, CO2 emissions, energy use, GDP growth, etc. or how it relates to any of these variables as well as possibly researching the evolution of such factors across several countries. It is safe to assume that not all countries are impacted by population growth in the same way but, if anything, this creates an opportunity for digging into a topic with a rather large scope and hopefully, interesting insights.<br>
+The goal of this paper is to study population growth and analyze how this growth impacts other variables such as mortality rate, arable land, CO2 emissions, energy use, GDP growth, etc. or how it relates to any of these variables as well as possibly researching the evolution of such factors across several countries. It is safe to assume that not all countries are impacted by population growth in the same way but, if anything, this creates an opportunity for digging into a topic with a rather large scope and hopefully, interesting insights.<br>
 Other than studying population growth from different angles we could also look to answer questions that might include:
 
 <ul>
