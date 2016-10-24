@@ -58,7 +58,7 @@ Considering the aforementioned objectives and scope, for this report we have sel
 * Surface area
 * Mortality rate
 
-In order to work properly on the data, we have created a single data set using the following process:
+We created a single data set using the following process:
 
 * All tables have been merged into a single data set
 * Years have been placed as a single variable called YEAR whose value is the year under review.
