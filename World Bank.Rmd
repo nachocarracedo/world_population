@@ -1,6 +1,6 @@
 ---
 title: "World Bank Data Analysis"
-author: "Constantin Rusu, Ignacio Carracedo, Nestor Gallo"
+author: "Constantin Rusu, Ignacio Carracedo, Nestor Gallo, Avi Subramaniam"
 date: "September 26, 2016"
 output: html_document
 ---
