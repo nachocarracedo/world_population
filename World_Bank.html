@@ -9,7 +9,7 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="Constantin Rusu, Ignacio Carracedo, Nestor Gallo" />
+<meta name="author" content="Constantin Rusu, Ignacio Carracedo, Nestor Gallo, Avi Subramaniam" />
 
 <meta name="date" content="2016-09-26" />
 
@@ -117,7 +117,7 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">World Bank Data Analysis</h1>
-<h4 class="author"><em>Constantin Rusu, Ignacio Carracedo, Nestor Gallo</em></h4>
+<h4 class="author"><em>Constantin Rusu, Ignacio Carracedo, Nestor Gallo, Avi Subramaniam</em></h4>
 <h4 class="date"><em>September 26, 2016</em></h4>
 
 </div>
@@ -149,10 +149,22 @@ financing through trust fund partnerships
 <div id="objectives" class="section level1">
 <h1>OBJECTIVE(S)</h1>
 <p>The world has seen some major shifts in the landscapes of politics, economy and society in the past 10 to 20 years. From the tragic events of September 11 in 2001 and the financial crysis of 2008 to the increasing gap in income equality and the rise of the internet as a universal digital medium, the world that has rebuilt after the second World War is anything if not a dynamic one. Such events change the world we know a little more every day. Social-economic interconnectedness (also known as economic globalization) has allowed for these changes to more easily scatter and disseminate all over the world so much so that it is now perfectly reasonable to expect a piece of news one night to result in protests being organized in several places around the world by the break of dawn the following day.<br><br> Forces of change such as the ones presented so far are, however, unexpected and hard to predict. If there is one force of world change that has been relatively consistent since the beginning of mankind it would have to be: population growth. Despite plagues and wars attacking the size of the population for humans living on Earth this is one indicator that has been fairly consistent in its upwards trend. Data from the Population Reference Bureau [2] has attempted to model an answer for the question “How many people have ever lived on Earth?” and started by mapping out the human population (as a best estimate) at a few checkpoint moments throghout human history:</p>
-<p>The overall goal of this paper is to study population growth and analyze how this growth impacts other variables such as mortality rate, arable land, CO2 emissions, energy use, GDP growth, etc. or how it relates to any of these variables as well as possibly researching the evolution of such factors across several countries. It is safe to assume that not all countries are impacted by population growth in the same way but, if anything, this creates an opportunity for digging into a topic with a rather large scope and hopefully, interesting insights.<br> Other than studying population growth from different angles we could also look to answer questions that might include:</p>
+<pre><code>##           Year    Population Births.per.1.000 Births.Between.Benchmarks
+## 1  50,000 B.C.             2                -                         -
+## 2    8000 B.C.     5,000,000               80             1,137,789,769
+## 3       1 A.D.   300,000,000               80            46,025,332,354
+## 4         1200   450,000,000               60            26,591,343,000
+## 5         1650   500,000,000               60            12,782,002,453
+## 6         1750   795,000,000               50             3,171,931,513
+## 7         1850 1,265,000,000               40             4,046,240,009
+## 8         1900 1,656,000,000               40             2,900,237,856
+## 9         1950 2,516,000,000            31-38             3,390,198,215
+## 10        1995 5,760,000,000               31             5,427,305,000
+## 11        2011 6,987,000,000               23             2,130,327,622</code></pre>
+<p>The goal of this paper is to study population growth and analyze how this growth impacts other variables such as mortality rate, arable land, CO2 emissions, energy use, GDP growth, etc. or how it relates to any of these variables as well as possibly researching the evolution of such factors across several countries. It is safe to assume that not all countries are impacted by population growth in the same way but, if anything, this creates an opportunity for digging into a topic with a rather large scope and hopefully, interesting insights.<br> Other than studying population growth from different angles we could also look to answer questions that might include:</p>
 <ul>
 <li>
-Can the growth in CO2 emissions be explained by population growth? If the information is analyzed per capita, does CO2 increase or decrease?
+Can the growth in CO2 emissions be explained by population growth? If the information is analyzed per capita of certain locations, does CO2 increase or decrease?
 </li>
 <li>
 How did farmland(as a percentage of land in each country) change over the years and what is the impact population growth has brought in this aspect?
@@ -175,24 +187,77 @@ To what extent is mortality rate correlated with CO2 emissions or the use of ren
 <h1>DATASET DESCRIPTION</h1>
 <p>As previously mentioned, The World Bank offers easy access to its publicly available data sets that contain information on a wide array of country indicators for each year where collection of that data was possible. These indicators cover different economic, political, geographical and social metrics that help paint a picture of countries all over the world.</p>
 <p>Considering the aforementioned objectives and scope, for this report we have selected 15 indicators. These are:</p>
-<ul>
-<li>% Access sanitation facilities</li>
-<li>% Agricultural land</li>
-<li>% Population 0 to 14 years old</li>
-<li>% Population 15 to 64 years old</li>
-<li>% Rural population</li>
-<li>% Urban population</li>
-<li>Population growth</li>
-<li>Population total</li>
-<li>% Renewable electricity output</li>
-<li>CO2 emisions</li>
-<li>Energy use</li>
-<li>GDP</li>
-<li>GDP annual growth</li>
-<li>Surface area</li>
-<li>Mortality rate</li>
-</ul>
-<p>In order to work properly on the data, we have created a single data set using the following process:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Indicator name</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Agricultural land</td>
+<td align="left">as a % of land area</td>
+</tr>
+<tr class="even">
+<td align="left">CO2 emision</td>
+<td align="left">metric tons per capita</td>
+</tr>
+<tr class="odd">
+<td align="left">Energy use</td>
+<td align="left">kg of oil equivalent per capita</td>
+</tr>
+<tr class="even">
+<td align="left">GDP</td>
+<td align="left">current US$</td>
+</tr>
+<tr class="odd">
+<td align="left">GDP growth</td>
+<td align="left">annual %</td>
+</tr>
+<tr class="even">
+<td align="left">Improved sanitation facilities</td>
+<td align="left">% of population with access</td>
+</tr>
+<tr class="odd">
+<td align="left">Mortality rate</td>
+<td align="left">under-5 (per 1,000 live births)</td>
+</tr>
+<tr class="even">
+<td align="left">Population ages 0-14</td>
+<td align="left">% of total</td>
+</tr>
+<tr class="odd">
+<td align="left">Population ages 15-64</td>
+<td align="left">% of total</td>
+</tr>
+<tr class="even">
+<td align="left">Population growth</td>
+<td align="left">annual %</td>
+</tr>
+<tr class="odd">
+<td align="left">Population</td>
+<td align="left">total</td>
+</tr>
+<tr class="even">
+<td align="left">Renewable electricity output</td>
+<td align="left">% of total electricity output</td>
+</tr>
+<tr class="odd">
+<td align="left">Rural population</td>
+<td align="left">% of total population</td>
+</tr>
+<tr class="even">
+<td align="left">Urban population</td>
+<td align="left">% of total population</td>
+</tr>
+<tr class="odd">
+<td align="left">Surface area</td>
+<td align="left">% of total</td>
+</tr>
+</tbody>
+</table>
+<p>We created a single data set using the following process:</p>
 <ul>
 <li>All tables have been merged into a single data set</li>
 <li>Years have been placed as a single variable called YEAR whose value is the year under review.</li>
@@ -213,20 +278,55 @@ To what extent is mortality rate correlated with CO2 emissions or the use of ren
 <li>Check for missing values</li>
 <li>Remove missing values (years and/or countries) to end up with a data.frame with no missing values</li>
 </ul>
+</div>
+<div id="variable-description" class="section level1">
+<h1>VARIABLE DESCRIPTION</h1>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Variable Name</th>
+<th align="left">Variable Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">country.name</td>
+<td align="left">Names of the 134 countries in the data set</td>
+</tr>
+<tr class="even">
+<td align="left">country.code</td>
+<td align="left">3-letters code for every country</td>
+</tr>
+<tr class="odd">
+<td align="left">indicator.name</td>
+<td align="left">Name of the 15 indicators</td>
+</tr>
+<tr class="even">
+<td align="left">indicador.code</td>
+<td align="left">code with format XXX.XXX.XXX.XX</td>
+</tr>
+<tr class="odd">
+<td align="left">year</td>
+<td align="left">From 1992 to 2011</td>
+</tr>
+<tr class="even">
+<td align="left">value</td>
+<td align="left">of the indicator that year in that country</td>
+</tr>
+</tbody>
+</table>
 <p>Here is the code of the script:</p>
 <pre class="r"><code># World Development Indicators:
 # This script loads csv downloaded from ://data.worldbank.org/topic
 # makes years as a feature and concatenates them together into one data.frame
-# then selects a good combination of years/countries without missing values
-
-# Load the WDI, readr and dplyr libraries
-library(WDI)
+# then selects a good combination of years/countries without missing values</code></pre>
+<p>First we load the WDI, readr and dplyr libraries:</p>
+<pre class="r"><code>library(WDI)
 library(readr)
 library(dplyr)
-library(tidyr)
-
-# Read each one of the indicators into a data frame from the downloaded CSV files
-setwd(&quot;C:/Users/carrai1/Desktop/Master/MA402_Data_Science/Assigment_1/&quot;)
+library(tidyr)</code></pre>
+<p>Next each one of the indicators are read into a data frame from the downloaded CSV files</p>
+<pre class="r"><code>setwd(&quot;C:/Users/Nestor/Documents/MSBA/3 FALL 2016/MA402/Project/world_population-master&quot;)
 san.df = read_csv(&quot;./data/%_access_sanitation_facilities_90_15.csv&quot;)
 ag.df = read_csv(&quot;./data/%_agricultural_land_61_13.csv&quot;)
 pop0.df = read_csv(&quot;./data/%_population_0_14_60_15.csv&quot;)
@@ -241,37 +341,26 @@ elecoutput.df= read_csv(&quot;./data/renew_elec_output_90_12.csv&quot;)
 mort5.df= read_csv(&quot;./data/mortality_less5_rate.csv&quot;)
 energy.df= read_csv(&quot;./data/energy_use_kg_oil.csv&quot;)
 gdp_growth.df= read_csv(&quot;./data/GDP_growth_annual%.csv&quot;)
-gdp.df= read_csv(&quot;./data/GDP.csv&quot;)
-
-# put all data.frames into a list
-all.list &lt;- list(san.df,ag.df,pop0.df,pop15.df,poprur.df,popur.df,co2.df,kmsqr.df,
+gdp.df= read_csv(&quot;./data/GDP.csv&quot;)</code></pre>
+<p>Next all data.frames are put into a list</p>
+<pre class="r"><code>all.list &lt;- list(san.df,ag.df,pop0.df,pop15.df,poprur.df,popur.df,co2.df,kmsqr.df,
                  popgrowth.df,poptotal.df,elecoutput.df,mort5.df,energy.df,
-                 gdp_growth.df,gdp.df)
-
-# Join all data.frames into a single data.frame wdi.df
-wdi.df = data.frame()
-# loop the list to set year and value as a column and concatenate
-for (aux.df in all.list){
-  # Rename variables
-  aux.df &lt;- rename(aux.df, country.name = `Country Name`, country.code = `Country Code`,
-                   indicator.name = `Indicator Name`,indicator.code = `Indicator Code`)
-  # &quot;Gather&quot; the year variables and values into a pair of variables: `year` and `value`
+                 gdp_growth.df,gdp.df)</code></pre>
+<p>All data.frames are put into a single data.frame called wdi.df</p>
+<pre class="r"><code>wdi.df = data.frame()</code></pre>
+<p>We then loop the list to set year and value as a column and concatenate them. Then rename the variables to the followng below:</p>
+<pre class="r"><code>for (aux.df in all.list){
+  aux.df &lt;- rename(aux.df, country.name = `Country Name`, country.code = `Country Code`, indicator.name = `Indicator Name`,indicator.code = `Indicator Code`)
   aux.df &lt;- gather(aux.df, year, value, -country.name, -country.code, -indicator.name, -indicator.code) 
-  #concatenates
+
   wdi.df &lt;- rbind(aux.df,wdi.df)
-}
-
-# Make the `indicator.code` variable into a factor
-wdi.df$indicator.code = factor(wdi.df$indicator.code)
-
-# Make the `country.code` variable into a factor
+}</code></pre>
+<p>Make the <code>indicator.code</code>, <code>country.code</code> variable into a factor and the <code>year</code> variable into an ordered factor:</p>
+<pre class="r"><code>wdi.df$indicator.code = factor(wdi.df$indicator.code)
 wdi.df$country.code = factor(wdi.df$country.code)
-
-# Make the `year` variable into an ordered factor
-wdi.df$year = factor(wdi.df$year, ordered=TRUE)
-
-# check final data.frame
-str(wdi.df)</code></pre>
+wdi.df$year = factor(wdi.df$year, ordered=TRUE)</code></pre>
+<p>We check final data.frame</p>
+<pre class="r"><code>str(wdi.df)</code></pre>
 <pre><code>## Classes 'tbl_df', 'tbl' and 'data.frame':    225720 obs. of  6 variables:
 ##  $ country.name  : chr  &quot;Aruba&quot; &quot;Andorra&quot; &quot;Afghanistan&quot; &quot;Angola&quot; ...
 ##  $ country.code  : Factor w/ 264 levels &quot;ABW&quot;,&quot;AFG&quot;,&quot;AGO&quot;,..: 1 5 2 3 4 6 7 8 9 10 ...
@@ -280,19 +369,16 @@ str(wdi.df)</code></pre>
 ##  $ year          : Ord.factor w/ 57 levels &quot;1960&quot;&lt;&quot;1961&quot;&lt;..: 1 1 1 1 1 1 1 1 1 1 ...
 ##  $ value         : chr  NA NA &quot;537777811.911111&quot; NA ...</code></pre>
 <p>The second part of the script removes a set of years and countries in order to have a final data.frame with no missing values. After studying the data we crafted a final data.frame that has 134 countries and 20 years (1992 -2011). Note that we can modify this second part of script to get different final data.frames if needed.</p>
-<pre class="r"><code># Remove column year=x61 and country.code=INX with 100% missing values
-wdi.df &lt;- filter(wdi.df, year!=&quot;X61&quot;)
-wdi.df &lt;- filter(wdi.df, country.code!=&quot;INX&quot;)
-
-# Create wdi.dfv2 20 years and 134 countries WITHOUT missing values
-wdi.dfv2 &lt;- filter(wdi.df, year&gt;1991&amp; year&lt;2012) 
+<p>We remove column year=x61 and country.code=INX with 100% missing values</p>
+<pre class="r"><code>wdi.df &lt;- filter(wdi.df, year!=&quot;X61&quot;)
+wdi.df &lt;- filter(wdi.df, country.code!=&quot;INX&quot;)</code></pre>
+<p>Next create wdi.dfv2 20 years and 134 countries without any missing values</p>
+<pre class="r"><code>wdi.dfv2 &lt;- filter(wdi.df, year&gt;1991&amp; year&lt;2012) 
 countries.mv &lt;- wdi.dfv2 %&gt;%  group_by(country.code) %&gt;%  summarize(count=n(), cnt.missing=sum(is.na(value)), pct.missing= 100*cnt.missing/count) %&gt;% 
-  arrange(country.code) %&gt;%  select(country.code, pct.missing) %&gt;%  arrange(desc(pct.missing))
-# Keep countries with 0% missing values
-country_keep = (filter(countries.mv, pct.missing == 0))$country.code
+  arrange(country.code) %&gt;%  select(country.code, pct.missing) %&gt;%  arrange(desc(pct.missing))</code></pre>
+<p>We keep countries with 0% missing values and check for % missing values for each year and each country</p>
+<pre class="r"><code>country_keep = (filter(countries.mv, pct.missing == 0))$country.code
 wdi.dfv2 &lt;- filter(wdi.dfv2, country.code %in% country_keep)
-
-# check % missing values for each year
 wdi.dfv2 %&gt;%  group_by(year) %&gt;%  summarize(count=n(), cnt.missing=sum(is.na(value)), pct.missing= 100*cnt.missing/count) %&gt;% 
   arrange(year) %&gt;%  select(year, pct.missing) %&gt;%   print(n=100)</code></pre>
 <pre><code>## # A tibble: 20 × 2
@@ -318,8 +404,7 @@ wdi.dfv2 %&gt;%  group_by(year) %&gt;%  summarize(count=n(), cnt.missing=sum(is.
 ## 18  2009           0
 ## 19  2010           0
 ## 20  2011           0</code></pre>
-<pre class="r"><code># check % missing values for each country
-wdi.dfv2 %&gt;%  group_by(country.code) %&gt;%  summarize(count=n(), cnt.missing=sum(is.na(value)), pct.missing= 100*cnt.missing/count) %&gt;% 
+<pre class="r"><code>wdi.dfv2 %&gt;%  group_by(country.code) %&gt;%  summarize(count=n(), cnt.missing=sum(is.na(value)), pct.missing= 100*cnt.missing/count) %&gt;% 
   arrange(country.code) %&gt;%  select(country.code, pct.missing) %&gt;%  arrange(desc(pct.missing)) %&gt;% print(n=250)</code></pre>
 <pre><code>## # A tibble: 134 × 2
 ##     country.code pct.missing
@@ -458,11 +543,10 @@ wdi.dfv2 %&gt;%  group_by(country.code) %&gt;%  summarize(count=n(), cnt.missing
 ## 132          ZAF           0
 ## 133          ZMB           0
 ## 134          ZWE           0</code></pre>
-<pre class="r"><code># Save  final data.frame wdi.dfv2 as a csv file
-wdi.dfv2$country.code = factor(wdi.dfv2$country.code) #refactor
+<p>We save the final data.frame wdi.dfv2 as a csv file and then check the structure</p>
+<pre class="r"><code>wdi.dfv2$country.code = factor(wdi.dfv2$country.code) #refactor
 wdi.dfv2$year = factor(wdi.dfv2$year, ordered=TRUE) #refactor
 write.csv(file=(&quot;./data/wdi.df.csv&quot;), x=wdi.dfv2)
-# check structure of final data.frame
 str(wdi.dfv2)</code></pre>
 <pre><code>## Classes 'tbl_df', 'tbl' and 'data.frame':    40200 obs. of  6 variables:
 ##  $ country.name  : chr  &quot;Angola&quot; &quot;Albania&quot; &quot;Arab World&quot; &quot;United Arab Emirates&quot; ...
