@@ -1,7 +1,7 @@
 ---
 title: "World Bank Data Analysis"
 author: "Constantin Rusu, Ignacio Carracedo, Nestor Gallo, Avi Subramaniam"
-date: "September 26, 2016"
+date: "October 24, 2016"
 output: html_document
 ---
 <center><img src="http://youth4c.org/wp-content/uploads/2015/03/The-World-Bank-logo.png" width="500"></img></center><br>
@@ -19,100 +19,79 @@ The World Bank is an international organization that aims to defeat poverty in t
 The organization focuses on delivering measurable results and in order to do that it leads a powerful intiative for open development. This consists of free access to tools and data that spans over more than 50 years for several macroeconomic and microeconomic factors for countries from all over the globe.
 
 #OBJECTIVE(S)
-The world has seen some major shifts in the landscapes of politics, economy and society in the past 10 to 20 years. From the tragic events of September 11 in 2001 and the financial crysis of 2008 to the increasing gap in income equality and the rise of the internet as a universal digital medium, the world that has rebuilt after the second World War is anything if not a dynamic one. Such events change the world we know a little more every day. Social-economic interconnectedness (also known as economic globalization) has allowed for these changes to more easily scatter and disseminate all over the world so much so that it is now perfectly reasonable to expect a piece of news one night to result in protests being organized in several places around the world by the break of dawn the following day.<br><br>
-Forces of change such as the ones presented so far are, however, unexpected and hard to predict. If there is one force of world change that has been relatively consistent since the beginning of mankind it would have to be: population growth. Despite plagues and wars attacking the size of the population for humans living on Earth this is one indicator that has been fairly consistent in its upwards trend. Data from the Population Reference Bureau [2] has attempted to model an answer for the question "How many people have ever lived on Earth?" and started by mapping out the human population (as a best estimate) at a few checkpoint moments throghout human history:
-```{r echo=FALSE}
-setwd("C:/Users/Nestor/Documents/MSBA/3 FALL 2016/MA402/Project/world_population-master")
-read.csv("./Data/popdata.csv")
+The world has seen some major shifts in the landscapes of politics, economy and society in the past 10 to 20 years. From the tragic events of September 11 in 2001 and the financial crysis of 2008 to the increasing gap in income equality and the rise of the internet as a universal digital medium, the world that has rebuilt after the second World War is anything if not a dynamic one. Social-economic interconnectedness (also known as economic globalization) has allowed for these changes to more easily scatter and disseminate all over the world so much so that it is now perfectly reasonable to expect a piece of news one night to result in protests being organized in several places around the world by the break of dawn the following day.<br><br>
+Forces of change such as the ones presented so far are, however, unexpected and hard to predict. However, if there is one force of world change that has been relatively consistent since the beginning of mankind it would have to be: population growth. Data from the Population Reference Bureau [2] has attempted to model an answer for the question "How many people have ever lived on Earth?" and started by mapping out the human population (as a best estimate) at a few checkpoint moments throghout human history as can be seen below. (the first column respresents the year, the second column represent the estimated population on Earth at that point in time, the third column represents the estimate number of births per one thousand people, the fourth column  represents the number of births between the current in-line year and the previous benchmark point)
+```{r echo=FALSE, warning=FALSE}
+library(WDI)
+library(readr)
+library(dplyr)
+library(tidyr)
+setwd("C:/Users/carrai1/Desktop/Master/MA402_Data_Science/Assigment_1/")
+wdi.df = read_csv("./data/wdi.df.csv")
 ```
-The goal of this paper is to study population growth and analyze how this growth impacts other variables such as mortality rate, arable land, CO2 emissions, energy use, GDP growth, etc. or how it relates to any of these variables as well as possibly researching the evolution of such factors across several countries. It is safe to assume that not all countries are impacted by population growth in the same way but, if anything, this creates an opportunity for digging into a topic with a rather large scope and hopefully, interesting insights.<br>
-Other than studying population growth from different angles we could also look to answer questions that might include:
+What is clear from this table is that the population on Earth seems to be headed in an upwards direction and it therefore poses the question: With the certainty of human population growing, how has this impacted the world we live in?
+<br><br>The goal of this paper is to study population growth and analyze how this growth impacts other variables such as mortality rate, arable land, CO2 emissions, energy use, GDP growth, etc. as well as researching the evolution of such factors across several countries through time. It is safe to assume that not all countries are impacted by population growth in the same way but, if anything, this creates an opportunity for digging into an interesting topic and revealing insightful results.<br>
+Other than studying population growth we also look to answer questions that include:
 
 <ul>
-  <li>Can the growth in CO2 emissions be explained by population growth? If the information is analyzed per capita of certain locations, does CO2 increase or decrease?</li>
-  <li>How did farmland(as a percentage of land in each country) change over the years and what is the impact population growth has brought in this aspect?</li>
-  <li>Is there a relationship between rural population size and arable land (as a percentage)?</li>
+  <li>Can the growth in CO2 emissions be explained by population growth? If the information is analyzed per capita among certain locations, how do these locations or areas differ in CO2 emissions? </li>
+  <li>How did farmland (as a percentage of land in each country) change over the years and what is the impact population growth has brought in this aspect?</li>
   <li>What are the countries that present consistent negative GDP growth in the past years?</li>
-  <li>How does the population of 0 to 14 year olds vary against the population aged between 15 and 64?</li>
+  <li>How does the population of 0 to 14 year olds vary against the population aged between 15 and 64? How do populations metrics shift and is there a noticeable trend?</li>
   <li>To what extent is mortality rate correlated with CO2 emissions or the use of renewable energy?</li>
 </ul>
 
 #DATASET DESCRIPTION
 As previously mentioned, The World Bank offers easy access to its publicly available data sets that contain information on a wide array of country indicators for each year where collection of that data was possible. These indicators cover different economic, political, geographical and social metrics that help paint a picture of countries all over the world. 
 
-Considering the aforementioned objectives and scope, for this report we have selected 15 indicators. These are:
+Considering the aforementioned objectives and scope, for this report we select 15 indicators. These are:
 
-Indicator name      |  Description
---------------------|-----------------------------------
-Agricultural land   | as a % of land area
-CO2 emision         | metric tons per capita
-Energy use          | kg of oil equivalent per capita
-GDP                 | current US$
-GDP growth          | annual %
-Improved sanitation facilities | % of population with access
-Mortality rate                 | under-5 (per 1,000 live births)
-Population ages 0-14           | % of total
-Population ages 15-64          | % of total
-Population growth              | annual %
-Population                     | total
-Renewable electricity output   | % of total electricity output
-Rural population               | % of total population
-Urban population               | % of total population
-Surface area                   | % of total
+* % Agricultural land 
+* % Population 0 to 14 years old 
+* % Population 15 to 64 years old 
+* % Rural population 
+* % Urban population 
+* Population growth 
+* Population total 
+* CO2 emisions 
+* Energy use
+* GDP
+* GDP annual growth
+* Surface area
 
-We created a single data set using the following process:
+We create a single data set using the following process:
 
-* All tables have been merged into a single data set
-* Years have been placed as a single variable called YEAR whose value is the year under review.
-* VALUE variable contains the indicator value in the designated year (this way we can have different years' range for each variable)
-* INDICADOR.CODE variable points out which indicator value in each line belongs with, while COUNTRY.CODE variable indicates the country 
+* Merge all variables of interest into a single dataset.
 * The missing values have been reduced, for this we have eliminated years if the country data was scarce.
 
-In total, we have obtained a dataset with 40,200 rows, on which the respective analysis will be done.
+In total, we obtain a dataset with 40,200 rows, on which the analysis is done.
 
 #DATASET PREPARATION
 
-To get the final data set we have created a script that does the following:
+To get the final data set we create scripts that do the following:
 
-* Reads the csv files of all the 15 indicators
-* Rename variables
-* Convert year into a column
-* Concatenate all 15 indicators into one data.frame
-* Check for missing values
-* Remove missing values (years and/or countries) to end up with a data.frame with no missing values
+* Reading the `CSV` files of all the 15 indicators
+* Renaming variables
+* Converting year into a column
+* Concatenating all 15 indicators into one `data.frame`
+* Checking for missing values
+* Removing missing values (years and/or countries) to end up with a `data.frame` with no missing values
 
-#VARIABLE DESCRIPTION
-
-Variable Name | Variable Description
---------------|---------------------
-country.name | Names of the 134 countries in the data set
-country.code | 3-letters code for every country
-indicator.name | Name of the 15 indicators 
-indicador.code | code with format XXX.XXX.XXX.XX 
-year | From 1992 to 2011
-value | of the indicator that year in that country
-
-Here is the code of the script:
-
-```{r, warning=FALSE,message=FALSE}
-# World Development Indicators:
-# This script loads csv downloaded from ://data.worldbank.org/topic
-# makes years as a feature and concatenates them together into one data.frame
-# then selects a good combination of years/countries without missing values
-```
 First we load the WDI, readr and dplyr libraries:
-```{r, warning=FALSE,message=FALSE}
+```{r, message=FALSE}
 library(WDI)
 library(readr)
 library(dplyr)
 library(tidyr)
 ```
-
-Next each one of the indicators are read into a data frame from the downloaded CSV files
-```{r, warning=FALSE,message=FALSE}
-
-setwd("C:/Users/Nestor/Documents/MSBA/3 FALL 2016/MA402/Project/world_population-master")
-san.df = read_csv("./data/%_access_sanitation_facilities_90_15.csv")
+The descriptions of these packages are as follows:<br>
+<ul>
+<li>`readr` - Read flat/tabular text files from disk (or a connection)</li>
+<li>`dplyr` - A Grammar of Data Manipulation. A fast, consistent tool for working with data frame like objects, both in memory and out of memory.</li>
+<li>`tidyr` - An evolution of 'reshape2'. It's designed specifically for data tidying (not general reshaping or aggregating) and works well with 'dplyr' data pipelines.</li>
+</ul>
+Next, each one of the indicators of interest are read into a data frame from the downloaded CSV files.
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
 ag.df = read_csv("./data/%_agricultural_land_61_13.csv")
 pop0.df = read_csv("./data/%_population_0_14_60_15.csv")
 pop15.df = read_csv("./data/%_population_15_64_60_15.csv")
@@ -122,67 +101,58 @@ co2.df= read_csv("./data/CO2_emisions_60_11.csv")
 kmsqr.df= read_csv("./data/km_square_61_15.csv")
 popgrowth.df= read_csv("./data/population_growth_60_15.csv")
 poptotal.df= read_csv("./data/population_total_60_15.csv")
-elecoutput.df= read_csv("./data/renew_elec_output_90_12.csv")
-mort5.df= read_csv("./data/mortality_less5_rate.csv")
 energy.df= read_csv("./data/energy_use_kg_oil.csv")
 gdp_growth.df= read_csv("./data/GDP_growth_annual%.csv")
 gdp.df= read_csv("./data/GDP.csv")
 ```
-Next all data.frames are put into a list
-```{r, warning=FALSE,message=FALSE}
-all.list <- list(san.df,ag.df,pop0.df,pop15.df,poprur.df,popur.df,co2.df,kmsqr.df,
-                 popgrowth.df,poptotal.df,elecoutput.df,mort5.df,energy.df,
+All data frames are now put into a list.
+```{r}
+all.list <- list(pop0.df,pop15.df,poprur.df,popur.df,co2.df,kmsqr.df,
+                 popgrowth.df,poptotal.df,energy.df,
                  gdp_growth.df,gdp.df)
 ```
-
-All data.frames are put into a single data.frame called wdi.df
-```{r, warning=FALSE,message=FALSE}
+All data frames are put into a single `data.frame` called `wdi.df`.
+```{r}
 wdi.df = data.frame()
 ```
-We then loop the list to set year and value as a column and concatenate them. Then rename the variables to the followng below:
-
-```{r, warning=FALSE,message=FALSE}
+We then loop the list to set year and value as a column, rename important variables and bind everything together.
+```{r, message=FALSE, results="hide"}
 for (aux.df in all.list){
-  aux.df <- rename(aux.df, country.name = `Country Name`, country.code = `Country Code`, indicator.name = `Indicator Name`,indicator.code = `Indicator Code`)
+  # Rename varibles
+  aux.df <- rename(aux.df, country.name = `Country Name`, country.code = `Country Code`,indicator.name = `Indicator Name`,indicator.code = `Indicator Code`)
+  # "Gather" the year variables and values into a pair of variables: `year` and `value`
   aux.df <- gather(aux.df, year, value, -country.name, -country.code, -indicator.name, -indicator.code) 
-
+  #Print number of rows to check
+  print(nrow(aux.df))
+  #Concatenate
   wdi.df <- rbind(aux.df,wdi.df)
 }
-
 ```
-
-Make the `indicator.code`, `country.code` variable into a factor and the `year` variable into an ordered factor:
-```{r, warning=FALSE,message=FALSE}
-
+Convert the `indicator.code`, `country.code` variables into factors and the `year` variable into an ordered factor:
+```{r}
 wdi.df$indicator.code = factor(wdi.df$indicator.code)
 wdi.df$country.code = factor(wdi.df$country.code)
 wdi.df$year = factor(wdi.df$year, ordered=TRUE)
 ```
 
-We check final data.frame
-```{r, warning=FALSE,message=FALSE}
-
+We check final data.frame.
+```{r}
 str(wdi.df)
 ```
-
-
-The second part of the script removes a set of years and countries in order to have a final data.frame with no missing values. After studying the data we crafted a final data.frame that has 134 countries and 20 years (1992 -2011). Note that we can modify this second part of script to get different final data.frames if needed.
-
-We remove column year=x61 and country.code=INX with 100% missing values
-```{r, warning=FALSE,message=FALSE}
+The second part of the script removes a set of years and countries in order to have a final `data.frame` with no missing values. After studying the data we crafted a final `data.frame` that has 134 countries and 20 years (1992 -2011).<br><br>
+We remove column `year=x61` and `country.code=INX` with 100% missing values.
+```{r, warning=FALSE, message=FALSE}
 wdi.df <- filter(wdi.df, year!="X61")
 wdi.df <- filter(wdi.df, country.code!="INX")
 ```
-Next create wdi.dfv2 20 years and 134 countries without any missing values
-```{r, warning=FALSE,message=FALSE}
-
+Next, we transfer the data into a new data frame named 'wdi.dfv2` for 20 years and 134 countries without any missing values.
+```{r}
 wdi.dfv2 <- filter(wdi.df, year>1991& year<2012) 
 countries.mv <- wdi.dfv2 %>%  group_by(country.code) %>%  summarize(count=n(), cnt.missing=sum(is.na(value)), pct.missing= 100*cnt.missing/count) %>% 
   arrange(country.code) %>%  select(country.code, pct.missing) %>%  arrange(desc(pct.missing))
 ```
-We keep countries with 0% missing values and check for % missing values for each year and each country
-```{r, warning=FALSE,message=FALSE}
-
+We keep countries with 0% missing values and check for % missing values for each year and each country.
+```{r, results="hide"}
 country_keep = (filter(countries.mv, pct.missing == 0))$country.code
 wdi.dfv2 <- filter(wdi.dfv2, country.code %in% country_keep)
 wdi.dfv2 %>%  group_by(year) %>%  summarize(count=n(), cnt.missing=sum(is.na(value)), pct.missing= 100*cnt.missing/count) %>% 
@@ -190,86 +160,55 @@ wdi.dfv2 %>%  group_by(year) %>%  summarize(count=n(), cnt.missing=sum(is.na(val
 wdi.dfv2 %>%  group_by(country.code) %>%  summarize(count=n(), cnt.missing=sum(is.na(value)), pct.missing= 100*cnt.missing/count) %>% 
   arrange(country.code) %>%  select(country.code, pct.missing) %>%  arrange(desc(pct.missing)) %>% print(n=250)
 ```
-We save the final data.frame wdi.dfv2 as a csv file and then check the structure
-```{r, warning=FALSE,message=FALSE}
-
+We save the final data frame `wdi.dfv2` as a `CSV` file and then check the structure.
+```{r}
 wdi.dfv2$country.code = factor(wdi.dfv2$country.code) #refactor
 wdi.dfv2$year = factor(wdi.dfv2$year, ordered=TRUE) #refactor
 write.csv(file=("./data/wdi.df.csv"), x=wdi.dfv2)
 str(wdi.dfv2)
 ```
-
-The second part of the script removes a set of years and countries in order to have a final data.frame with no missing values. After studying the data we crafted a final data.frame that has 134 countries and 20 years (1992 -2011). Note that we can modify this second part of script to get different final data.frames if needed.
-
-```{r, warning=FALSE,message=FALSE}
-# Remove column year=x61 and country.code=INX with 100% missing values
-wdi.df <- filter(wdi.df, year!="X61")
-wdi.df <- filter(wdi.df, country.code!="INX")
-
-# Create wdi.dfv2 20 years and 134 countries WITHOUT missing values
-wdi.dfv2 <- filter(wdi.df, year>1991& year<2012) 
-countries.mv <- wdi.dfv2 %>%  group_by(country.code) %>%  summarize(count=n(), cnt.missing=sum(is.na(value)), pct.missing= 100*cnt.missing/count) %>% 
-  arrange(country.code) %>%  select(country.code, pct.missing) %>%  arrange(desc(pct.missing))
-# Keep countries with 0% missing values
-country_keep = (filter(countries.mv, pct.missing == 0))$country.code
-wdi.dfv2 <- filter(wdi.dfv2, country.code %in% country_keep)
-
-# check % missing values for each year
-wdi.dfv2 %>%  group_by(year) %>%  summarize(count=n(), cnt.missing=sum(is.na(value)), pct.missing= 100*cnt.missing/count) %>% 
-  arrange(year) %>%  select(year, pct.missing) %>%   print(n=100)
-# check % missing values for each country
-wdi.dfv2 %>%  group_by(country.code) %>%  summarize(count=n(), cnt.missing=sum(is.na(value)), pct.missing= 100*cnt.missing/count) %>% 
-  arrange(country.code) %>%  select(country.code, pct.missing) %>%  arrange(desc(pct.missing)) %>% print(n=250)
-
-# Save  final data.frame wdi.dfv2 as a csv file
-wdi.dfv2$country.code = factor(wdi.dfv2$country.code) #refactor
-wdi.dfv2$year = factor(wdi.dfv2$year, ordered=TRUE) #refactor
-write.csv(file=("./data/wdi.df.csv"), x=wdi.dfv2)
-# check structure of final data.frame
-str(wdi.dfv2)
-```
-
-
 #VARIABLE SUMMARIES
-
-```{r, echo=FALSE, warning=FALSE,message=FALSE}
-# Read dataframe of wdi.df and drop index column
-#setwd("C:/Users/carrai1/Desktop/Master/MA402_Data_Science/Assigment_1/")
+Now that we have a clean dataset to work with that contains the data we deem of interest we load it from the file we saved previously and drop the column `index`.
+```{r}
 wdi.df = read_csv("./data/wdi.df.csv")
 drops='X1'
 wdi.df = wdi.df[ , !(names(wdi.df) %in% drops)]
 options(scipen=999) # disable scientific notation. Easiear to read
-options(dplyr.width = Inf) # print all columns
+```
+
+We select the countries of interest (https://en.wikipedia.org/wiki/BRICSg):
+
+```{r, warning=FALSE}
+wdi.df %>% filter(. , country.code %in% c("BRA","CHN","IND","RUS","ZAF")) -> wdi.df
+wdi.df %>% rename(. , )
 ```
 
 
 First, let's check the number of unique values for each of our columns (year, code, country):
 
-```{r, warning=FALSE,message=FALSE}
+```{r}
 wdi.df %>% summarise(number_of_unique_years = n_distinct(year))
 wdi.df %>% summarise(number_of_unique_ind = n_distinct(indicator.code))
 wdi.df %>% summarise(number_of_unique_countries = n_distinct(country.code))
 ```
 
-
 Next, we'll calculate the mean, median, standard deviation, mininum, and maximun of each indicator code. For clarity we'll also add the indicator name:
 
-```{r, warning=FALSE,message=FALSE}
+```{r}
 # get values summary for every indicator (mean, median, min, max, sd)
+options(dplyr.width = Inf)
 wdi.df %>% group_by(indicator.name, indicator.code) %>% summarise(mean=round(mean(value), 2), median=round(median(value), 2), sd=round(sd(value), 2),
                                                                   max=round(max(value), 2),min=round(min(value), 2))  %>% print(n=)
 ```
 
+We'll calculate the same statistics for each indicator code as above but this time we'll show the statistics for the first 5 years :
 
-We'll calculate the same statistics for each indicator code as above but this time we'll show the statistics for every year:
-
-```{r, warning=FALSE,message=FALSE}
+```{r}
 # get values summary for every year/indicator (mean, median, min, max, sd)
 wdi.df %>% group_by(year,indicator.code ) %>% summarise(mean=round(mean(value), 2), median=round(median(value), 2), sd=round(sd(value), 2),
                                                                   max=round(max(value), 2),min=round(min(value), 2))  -> summary.year.code.df
-for (y in unique(summary.year.code.df$year)){summary.year.code.df %>% filter(year == y) %>% print()}
+for (y in unique(summary.year.code.df$year)[1:5]){summary.year.code.df %>% filter(year == y) %>% print()}
 ```
-
 
 And now for every country:
 
@@ -277,10 +216,8 @@ And now for every country:
 # get values summary for every country/indicator (mean, median, min, max, sd)
 wdi.df %>% group_by(country.name,indicator.code) %>% summarise(mean=round(mean(value), 2), median=round(median(value), 2), sd=round(sd(value), 2),
                                                                   max=round(max(value), 2),min=round(min(value), 2)) -> summary.country.code.df 
-for (c in unique(summary.country.code.df$country.name)){summary.country.code.df %>% filter(country.name == c) %>% print()}
+for (c in unique(summary.country.code.df$country.name)[1:5]){summary.country.code.df %>% filter(country.name == c) %>% print()}
 ```
-
-
 
 
 ##References
