@@ -87,7 +87,6 @@ wdi.df$indicator.code = factor(wdi.df$indicator.code, ordered=TRUE) #refactor
 wdi.df$value <- as.numeric(wdi.df$value)
 
 #transform data frame to have a column for each indicator
-#aux.df <- gather(aux.df, year, value, -country.name, -country.code, -indicator.name, -indicator.code)
 wdi.df %>% spread(., indicator.code, value) -> wdi.df
 
 #rename indicator columns for better understanding
@@ -145,7 +144,7 @@ indicators <- c("energy.use", "co2.emission","GDP", "GDP.growth", "pop.0.14", "p
 summary(wdi.df[indicators])
 
 #summaries per countries
-wdi.df %>% group_by(country.code) %>% summarise(avg=mean(energy.use), median=median(energy.use), sd=sd(energy.use), max=max(energy.use),min=min(energy.use))
+wdi.df %>% group_by(country.code) %>% summarise(avg=mean(energy.use), median=median(energy.use), sd=sd(energy.use), max=max(energy.use),min=min(energy.use)) %>% print(.)
 wdi.df %>% group_by(country.code) %>% summarise(avg=mean(co2.emission), median=median(co2.emission), sd=sd(co2.emission), max=max(co2.emission),min=min(co2.emission))
 wdi.df %>% group_by(country.code) %>% summarise(avg=mean(GDP.growth), median=median(GDP.growth), sd=sd(GDP.growth), max=max(GDP.growth),min=min(GDP.growth))
 wdi.df %>% group_by(country.code) %>% summarise(avg=mean(GDP), median=median(GDP), sd=sd(GDP), max=max(GDP),min=min(GDP))
