@@ -1,7 +1,7 @@
 ---
 title: "World Bank Data Analysis"
 author: "Constantin Rusu, Ignacio Carracedo, Nestor Gallo, Avi Subramaniam"
-date: "October 24, 2016"
+date: "October 31, 2016"
 output: html_document
 ---
 <center><img src="http://youth4c.org/wp-content/uploads/2015/03/The-World-Bank-logo.png" width="500"></img></center><br>
@@ -16,28 +16,34 @@ The World Bank is an international organization that aims to defeat poverty in t
   <li>financing through trust fund partnerships</li>
 </ul>
 
-The organization focuses on delivering measurable results and in order to do that it leads a powerful initiative for open development. This consists of free access to tools and data that spans over more than 50 years for several macroeconomic and microeconomic factors for countries from all over the globe.
+The World Bank also offers policy advice, technical assistance and research and analysis. Knowledge sharing is one of the means through which the organization aims to achieve its goals. As such, it also offers fund and partnerships for organizing conferences and hosting forums that discuss issues like the development of countries, poverty and socio-economic innovation.
 
-#OBJECTIVE(S)
-The world has seen some major shifts in the landscapes of politics, economy and society in the past 10 to 20 years. From the tragic events of September 11 in 2001 and the financial crisis of 2008 to the increasing gap in income equality and the rise of the internet as a universal digital medium, the world that has rebuilt after the second World War is anything if not a dynamic one. Social-economic interconnections (also known as economic globalization) has allowed for these changes to more easily scatter and disseminate all over the world so much so that it is now perfectly reasonable to expect a piece of news one night to result in protests being organized in several places around the world by the break of dawn the following day.<br><br>
-Forces of change such as the ones presented so far are, however, unexpected and hard to predict. However, if there is one force of world change that has been relatively consistent since the beginning of mankind it would have to be: population growth. Data from the Population Reference Bureau [2] has attempted to model an answer for the question "How many people have ever lived on Earth?" and started by mapping out the human population (as a best estimate) at a few checkpoint moments throughout human history as can be seen below. (the first column represents the year, the second column represent the estimated population on Earth at that point in time, the third column represents the estimate number of births per one thousand people, the fourth column  represents the number of births between the current in-line year and the previous benchmark point)
+The organization focuses on delivering measurable results and in order to do that it leads a powerful initiative for open development and access to information. This consists of free access to tools and data that spans over more than 50 years for several macroeconomic and microeconomic factors for countries from all over the globe. 
+
+#OBJECTIVES
+The world has seen some major shifts in the landscapes of politics, economy and society in the past 10 to 20 years. From the tragic events of September 11 in 2001 and the financial crisis of 2008 to the increasing gap in income equality and the rise of the internet as a universal digital medium, the world that has rebuilt after the second World War is anything if not a dynamic one. Social-economic interconnections (also known as economic globalization) has allowed for these changes to more easily scatter and disseminate all over the world.<br><br>
+Forces of change such as the ones presented so far are, however, unexpected and hard to predict. However, if there is one force of world change that has been relatively consistent since the beginning of mankind it would have to be population growth. Data from the Population Reference Bureau [2] has attempted to model an answer for the question "How many people have ever lived on Earth?" and started by mapping out the human population (as a best estimate) at a few checkpoint moments throughout human history as can be seen below.
+
+```{r, echo=FALSE}
+setwd('C:\\Users\\Ross DeWitt\\Documents\\GitHub\\MA799_Project1\\world_population')
+read.csv('Data/popdata.csv', header=TRUE)
+```
+<i>The first column represents the year, the second column represent the estimated population on Earth at that point in time, the third column represents the estimate number of births per one thousand people, the fourth column  represents the number of births between the current in-line year and the previous benchmark point.</i><br>
 
 What is clear from this table is that the population on Earth seems to be headed in an upwards direction and it therefore poses the question: With the certainty of human population growing, how has this impacted the world we live in?
-<br><br>The goal of this paper is to study population growth and analyze how this growth impacts other variables such as mortality rate, arable land, CO2 emissions, energy use, GDP growth, etc. as well as researching the evolution of such factors across several countries through time. It is safe to assume that not all countries are impacted by population growth in the same way but, if anything, this creates an opportunity for digging into an interesting topic and revealing insightful results.<br>
+<br><br>The goal of this paper is to study population growth in emergent economy countries (more specifically BRICS[3]) and analyze how this growth impacts other variables such as CO2 emissions and energy use as well as researching the evolution of such factors across emerging economies through time. It is safe to assume that not all countries are impacted by population growth in the same way but, if anything, this creates an opportunity for digging into an interesting topic and revealing insightful results.<br>
 Other than studying population growth we also look to answer questions that include:
 
 <ul>
   <li>Can the growth in CO2 emissions be explained by population growth? If the information is analyzed per capita among certain locations, how do these locations or areas differ in CO2 emissions? </li>
-  <li>How did farmland (as a percentage of land in each country) change over the years and what is the impact population growth has brought in this aspect?</li>
   <li>What are the countries that present consistent negative GDP growth in the past years?</li>
   <li>How does the population of 0 to 14 year old vary against the population aged between 15 and 64? How do populations metrics shift and is there a noticeable trend?</li>
-  <li>To what extent is mortality rate correlated with CO2 emissions or the use of renewable energy?</li>
 </ul>
 
 #DATASET DESCRIPTION
 As previously mentioned, The World Bank offers easy access to its publicly available data sets that contain information on a wide array of country indicators for each year where collection of that data was possible. These indicators cover different economic, political, geographical and social metrics that help paint a picture of countries all over the world. 
 
-Considering the aforementioned objectives and scope, for this report we select 15 indicators. These are:
+Considering the aforementioned objectives and scope, for this report we select 11 indicators. These are:
 
 * % Population 0 to 14 years old 
 * % Population 15 to 64 years old 
@@ -51,10 +57,12 @@ Considering the aforementioned objectives and scope, for this report we select 1
 * GDP annual growth
 * Surface area
 
+<b>ADD SCALES AND UNITS OF MEASUREMENT</b>
+
 We create a single data set using the following process:
 
 * Merge all variables of interest into a single dataset.
-* The missing values have been reduced, for this we have eliminated years if the country data was scarce.
+* Remove years where data is not available for all metrics we have chosen.
 
 #DATASET PREPARATION
 
@@ -85,7 +93,7 @@ Next, each one of the indicators of interest are read into its respective data f
 # disable scientific notation. Easiear to read
 options(scipen=999)
 # Read each one fo the indicators into a data frame from the downloaded CSV files (remove manuall first 3 lines of cvs)
-setwd("C:/Users/carrai1/Desktop/Master/MA402_Data_Science/Assigment_1/")
+#setwd("C:/Users/carrai1/Desktop/Master/MA402_Data_Science/Assigment_1/")
 pop0.df = read_csv("./data/%_population_0_14_60_15.csv")
 pop15.df = read_csv("./data/%_population_15_64_60_15.csv")
 poprur.df= read_csv("./data/%_rural_population_60_15.csv")
@@ -99,8 +107,7 @@ gdp_growth.df= read_csv("./data/GDP_growth_annual%.csv")
 gdp.df= read_csv("./data/GDP.csv")
 ```
 
-
-we All data frames are now put into a list.
+All data frames are now put into a list.
 ```{r}
 all.list <- list(pop0.df,pop15.df,poprur.df,popur.df,co2.df,kmsqr.df,
                  popgrowth.df,poptotal.df,energy.df,gdp_growth.df,gdp.df)
@@ -110,7 +117,6 @@ we create a `data.frame` called `wdi.df`. Then we loop every indicator data fram
 * Rename columns
 * Use function `gather` to set `year` and `value` of the indicator into a column. This will facilitate exploring missing values.
 * Concatenate indicator data frame with `wdi.df`
-
 
 ```{r}
 wdi.df = data.frame()
@@ -135,9 +141,7 @@ wdi.df$year = factor(wdi.df$year, ordered=TRUE)
 wdi.df <- filter(wdi.df, year!="X61")
 wdi.df <- filter(wdi.df, country.code!="INX")
 ```
-
-
-We select our 5 countries of interest. And after doing some studying of missing values we select 2 complete decades (1992 -2011) to craft a data frame without missing values:
+We select our 5 countries of interest (Brazil, Russia, India, China, South Africa) . We then select 2 complete decades (1992 -2011) to craft a data frame without missing values:
 
 ```{r}
 #select 5 countries of interest (https://en.wikipedia.org/wiki/BRICS) and years 1992/2011 (2 decades/20 years) 
@@ -145,12 +149,12 @@ wdi.df %>% filter(. , country.code %in% c("BRA","CHN","IND","RUS","ZAF")) -> wdi
 wdi.df <- filter(wdi.df, year>1991 & year<2012)
 ```
 
-Now we want to create a data frame where we can perform our queries to the data. We want a data frame with a column per indicator. This is the process:
+In order to facilitate analysis we create a data frame where indicator values are found per column. This is the process:
 
-* Drop columns we don't need
-* Refactor columns because we don't have all the values we had before selecting countries and years
-* Transform data frame to have a column per indicator
-* Rename indicators to a more descriptive name easier for the reader
+* Drop columns that are not needed
+* Refactor columns to account for removal of some levels in our filtering and cleaning process
+* Transform data frame with indicator values per column
+* Rename indicators to a more descriptive name
 
 ```{r}
 drops=c('country.name','indicator.name') # drop columns we don't need
@@ -178,7 +182,7 @@ wdi.df %>% rename(. , surface.km2 =AG.SRF.TOTL.K2,
 ) -> wdi.df
 ```
 
-Next, we generate a new indicator we think more useful than "surface of country in km2" which is "population density" (`pop.total / surface.km2`). We then remove `surface.km2` from the data frame:
+One way that the "surface area" variable could be of better use to our analysis would be to convert it to population density, as can be seen below.
 
 ```{r}
 #create new indicator POPULATION DENSITY = POPULATION TOTAL/TOTAL COUNTRY SURFACE
@@ -186,7 +190,7 @@ wdi.df %>% mutate(., pop.density = pop.total / surface.km2) -> wdi.df
 wdi.df$surface.km2 <- NULL
 ```
 
-For each indicator we get the quantiles and store it in a different indicator with the same name and `.q` a the end for future use:
+Next, we generate quantiles for each indicator and store it in a different indicator with the same name and `.q` a the end for future use.
 ```{r}
 #get quantiles for all indicators and usen the name of the column + .q
 make.ntiles = function (inputvar, n) { 
@@ -215,11 +219,11 @@ wdi.df %>%  mutate(energy.use.q = make.ntiles(energy.use, 4 ),
                    ) -> wdi.df
 ```
 
-Now that we have a clean dataset to work with that contains the data we deem of interest.
+Now that we have a clean dataset to work with we move on to our analysis.
 
 #VARIABLE SUMMARIES
 
-First, let's check summary statistics of all the indicators:
+First, we take a quick glance at summary statistics for each indicator that we have included in this study:
 
 ```{r}
 indicators <- c("energy.use", "co2.emission","GDP", "GDP.growth", "pop.0.14", "pop.15.64",
@@ -227,119 +231,132 @@ indicators <- c("energy.use", "co2.emission","GDP", "GDP.growth", "pop.0.14", "p
 summary(wdi.df[indicators])
 ```
 
+##Per country averages and statistics
 Next, we'll calculate the mean, median, standard deviation, minimum, and maximum of each indicator code per country:
 
-***Energy use***
+###ENERGY USE
 ```{r, warning=FALSE,message=FALSE}
 wdi.df %>% group_by(country.code) %>% summarise(avg=mean(energy.use), median=median(energy.use), sd=sd(energy.use), max=max(energy.use),min=min(energy.use))
 ```
-***CO2 emisions***
+As can be seen from this table, regardless of variation across data from 20 years (looking at minimum and maximum values achieved), countries tend to remain in their own relative brackets of energy consumption with Russia leading the numbers while India consistently being the lowest energy consumer among the 5.
+
+###CO2 EMISSIONS
 ```{r}
 wdi.df %>% group_by(country.code) %>% summarise(avg=mean(co2.emission), median=median(co2.emission), sd=sd(co2.emission), max=max(co2.emission),min=min(co2.emission))
 ```
-***GDP annual growth***
+It is interesting to see that, for the most part, the level of energy consumption rank for a country is indicative of its CO2 emissions score (in metric tons per capita). This relationship is a non-trivial one and it is one of the reasons energy consumption is a hot topic at the center of the climate change debate [4]. Looking at the ratios between consumption and emissions we can get a hint at a rough estimate for relative energy efficiency (<i>Lower values mean lower efficiency.</i>).
 ```{r}
-wdi.df %>% group_by(country.code) %>% summarise(avg=mean(GDP.growth), median=median(GDP.growth), sd=sd(GDP.growth), max=max(GDP.growth),min=min(GDP.growth))
+wdi.df %>% group_by(country.code) %>% summarise(avg=mean(energy.use)/mean(co2.emission), median=median(energy.use)/median(co2.emission), sd=sd(energy.use)/sd(co2.emission), max=max(energy.use)/max(co2.emission),min=min(energy.use)/min(co2.emission))
 ```
-***GDP***
+The data seems to suggest that the countries with the worst energy efficiency scores (as an average between 1992 and 2011) are China and South Africa with Brazil being the most efficient.
+
+###GDP <b>THIS IS MISSING THE LAST COLUMN</b>
 ```{r}
 wdi.df %>% group_by(country.code) %>% summarise(avg=mean(GDP), median=median(GDP), sd=sd(GDP), max=max(GDP),min=min(GDP))
 ```
-***% Population 0 to 14 years old***
+
+###GDP ANNUAL GROWTH
 ```{r}
-wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.0.14), median=median(pop.0.14), sd=sd(pop.0.14), max=max(pop.0.14),min=min(pop.0.14))
+wdi.df %>% group_by(country.code) %>% summarise(avg=mean(GDP.growth), median=median(GDP.growth), sd=sd(GDP.growth), max=max(GDP.growth),min=min(GDP.growth))
 ```
-***% Population 15 to 64 years old***
-```{r}
-wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.15.64), median=median(pop.15.64), sd=sd(pop.15.64), max=max(pop.15.64),min=min(pop.15.64))
-```
-***Population growth***
+
+The country with the highest average GDP growth between 1992 and 2011 is China (10.5%), a country with a booming economy that has been gaining a close watch from the world's economists [5]. India comes in second (at 6.7%), most likely  due to the steep rise of the country's tech industry.
+
+###POPULATION GROWTH
 ```{r}
 wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.growth), median=median(pop.growth), sd=sd(pop.growth), max=max(pop.growth),min=min(pop.growth))
 ```
-
-The only country of all 5 with a negative average is Russia.
-
-***Population total***
+Looking at population growth data it would seem that Russia is the country with the most stable evolution in this aspect but the low variance of this metric tends to gravitate around the tipping point of `0` between positive and negative population growth. On the other hand, South Africa is displaying consistent positive change with the highest average.
+###POPULATION OF 0 TO 14 YEAR-OLDS (%)
+```{r}
+wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.0.14), median=median(pop.0.14), sd=sd(pop.0.14), max=max(pop.0.14),min=min(pop.0.14))
+```
+###POPULATION OF 15 TO 64 YEAR-OLDS (%)
+```{r}
+wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.15.64), median=median(pop.15.64), sd=sd(pop.15.64), max=max(pop.15.64),min=min(pop.15.64))
+```
+Looking at these two tables 
+###POPULATION TOTAL
 ```{r}
 wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.total), median=median(pop.total), sd=sd(pop.total), max=max(pop.total),min=min(pop.total))
 ```
-***% Rural population***
+###RURAL POPULATION(%)
 ```{r}
 wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.rural), median=median(pop.rural), sd=sd(pop.rural), max=max(pop.rural),min=min(pop.rural))
 ```
 
 By observing min and max values we can see how China has the biggest change on rural population which matches the numbers of urban population below. Many Chinese people moved from rural areas to urban areas.
 
-***% Urban population***
+###URBAN POPULATION(%)
 ```{r}
 wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.urban), median=median(pop.urban), sd=sd(pop.urban), max=max(pop.urban),min=min(pop.urban))
 ```
-***Population density***
+###POPULATION DENSITY
 ```{r}
 wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.density), median=median(pop.density), sd=sd(pop.density), max=max(pop.density),min=min(pop.density))
 ```
 
 India, followed by China, are the countries big highest population density.
 
-
+##Yearly averages in BRICS
 Now we do the same but for every year instead:
 
 
-***Energy use***
+###ENERGY USE ACROSS TIME
 ```{r}
 wdi.df %>% group_by(year) %>% summarise(avg=mean(energy.use), median=median(energy.use), sd=sd(energy.use), max=max(energy.use),min=min(energy.use))
 ```
 
 As expected, being the countries emerging powers, the energy use has an upward trend through the years.
 
-***CO2 emisions***
+###CO2 EMISSIONS
 ```{r}
 wdi.df %>% group_by(year) %>% summarise(avg=mean(co2.emission), median=median(co2.emission), sd=sd(co2.emission), max=max(co2.emission),min=min(co2.emission))
 ```
 
 The average of CO2 emissions has remained approximately constant during the 2 decades under study.
 
-***GDP annual growth***
+###GDP ANNUAL GROWTH
 ```{r}
 wdi.df %>% group_by(year) %>% summarise(avg=mean(GDP.growth), median=median(GDP.growth), sd=sd(GDP.growth), max=max(GDP.growth),min=min(GDP.growth))
 ```
-***GDP***
+###GDP
 ```{r}
 wdi.df %>% group_by(year) %>% summarise(avg=mean(GDP), median=median(GDP), sd=sd(GDP), max=max(GDP),min=min(GDP))
 ```
-***% Population 0 to 14 years old***
+###POPULATION 0 TO 14 YEAR-OLDS (%)
 ```{r}
 wdi.df %>% group_by(year) %>% summarise(avg=mean(pop.0.14), median=median(pop.0.14), sd=sd(pop.0.14), max=max(pop.0.14),min=min(pop.0.14))
 ```
-***% Population 15 to 64 years old***
+###POPULATION 15 TO 64 YEAR-OLDS (%)
 ```{r}
 wdi.df %>% group_by(year) %>% summarise(avg=mean(pop.15.64), median=median(pop.15.64), sd=sd(pop.15.64), max=max(pop.15.64),min=min(pop.15.64))
 ```
-***Population growth***
+###POPULATION GROWTH
 ```{r}
 wdi.df %>% group_by(year) %>% summarise(avg=mean(pop.growth), median=median(pop.growth), sd=sd(pop.growth), max=max(pop.growth),min=min(pop.growth))
 ```
-***Population total***
+###POPULATION TOTAL
 ```{r}
 wdi.df %>% group_by(year) %>% summarise(avg=mean(pop.total), median=median(pop.total), sd=sd(pop.total), max=max(pop.total),min=min(pop.total))
 ```
-***% Rural population***
+###RURAL POPULATION (%)
 ```{r}
 wdi.df %>% group_by(year) %>% summarise(avg=mean(pop.rural), median=median(pop.rural), sd=sd(pop.rural), max=max(pop.rural),min=min(pop.rural))
 ```
-***% Urban population***
+###URBAN POPULATION (%)
 ```{r}
 wdi.df %>% group_by(year) %>% summarise(avg=mean(pop.urban), median=median(pop.urban), sd=sd(pop.urban), max=max(pop.urban),min=min(pop.urban))
 ```
-***Population density***
+###POPULATION DENSITY
 ```{r}
 wdi.df %>% group_by(year) %>% summarise(avg=mean(pop.density), median=median(pop.density), sd=sd(pop.density), max=max(pop.density),min=min(pop.density))
 ```
-
 
 ##References
 [1] Investopedia, http://www.investopedia.com/articles/03/042303.asp<br>
 [2] Population Reference Bureau, http://www.prb.org/Publications/Articles/2002/HowManyPeopleHaveEverLivedonEarth.aspx
 [3] BRICS (Wikipedia), https://en.wikipedia.org/wiki/BRICS
+[4] INTERNATIONAL ENERGY OUTLOOK 2016, https://www.eia.gov/forecasts/ieo/emissions.cfm
+[5] What China's Economic Growth Figures Mean, http://www.nytimes.com/2016/07/15/business/international/china-gdp-economic-growth.html?_r=0
 
