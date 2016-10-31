@@ -25,13 +25,13 @@ The world has seen some major shifts in the landscapes of politics, economy and 
 Forces of change such as the ones presented so far are, however, unexpected and hard to predict. However, if there is one force of world change that has been relatively consistent since the beginning of mankind it would have to be population growth. Data from the Population Reference Bureau [2] has attempted to model an answer for the question "How many people have ever lived on Earth?" and started by mapping out the human population (as a best estimate) at a few checkpoint moments throughout human history as can be seen below.
 
 ```{r, echo=FALSE}
-setwd('C:\\Users\\Ross DeWitt\\Documents\\GitHub\\MA799_Project1\\world_population')
+setwd("C:/Users/Nestor/Documents/MSBA/3 FALL 2016/MA402/Project/world_population-master")
 read.csv('Data/popdata.csv', header=TRUE)
 ```
 <i>The first column represents the year, the second column represent the estimated population on Earth at that point in time, the third column represents the estimate number of births per one thousand people, the fourth column  represents the number of births between the current in-line year and the previous benchmark point.</i><br>
 
 What is clear from this table is that the population on Earth seems to be headed in an upwards direction and it therefore poses the question: With the certainty of human population growing, how has this impacted the world we live in?
-<br><br>The goal of this paper is to study population growth in emergent economy countries (more specifically BRICS[3]) and analyze how this growth impacts other variables such as CO2 emissions and energy use as well as researching the evolution of such factors across emerging economies through time. It is safe to assume that not all countries are impacted by population growth in the same way but, if anything, this creates an opportunity for digging into an interesting topic and revealing insightful results.<br>
+<br><br>The goal of this paper is to study population growth in emergent economy countries with a significant population (more specifically BRICS[3]) and analyze how this growth impacts other variables such as CO2 emissions and energy use as well as researching the evolution of such factors across emerging economies through time. It is safe to assume that not all countries are impacted by population growth in the same way but, if anything, this creates an opportunity for digging into an interesting topic and revealing insightful results.<br>
 Other than studying population growth we also look to answer questions that include:
 
 <ul>
@@ -221,6 +221,26 @@ wdi.df %>%  mutate(energy.use.q = make.ntiles(energy.use, 4 ),
 
 Now that we have a clean dataset to work with we move on to our analysis.
 
+#VARIABLE DESCRIPTION
+
+Our final data set has 13 variables. Two of them are for the country and year of evaluation, the other 11 variables are indicators. Population density is a variable we created based on the total population and surface area of BRICS countries.
+
+Variable Name | Variable Description | Unit
+--------------|------|--------------
+country.code | Country code for every BRICS country | 3 capital letters 
+year | From 1992 to 2011 | year 
+energy.use  | Energy use | kg of oil equivalent per capita
+co2.emision | CO2 emisions | metric tons per capita 
+GDP         | Gross Domestic Product | current US$ 
+GDP.growth  | Gross Domestic Product Growth | annual % 
+pop.0.14    | Population ages 0-14 | % of total 
+pop.15.64   | Population ages 15-64 | % of total 
+pop.growth  | Population growth | annual % 
+pop.total   | Total population | numeric 
+pop.rural   | Rural population | % of total population 
+pop.urban   | Urban population | % of total population 
+pop.density | population per square meter | numeric
+
 #VARIABLE SUMMARIES
 
 First, we take a quick glance at summary statistics for each indicator that we have included in this study:
@@ -250,36 +270,41 @@ wdi.df %>% group_by(country.code) %>% summarise(avg=mean(energy.use)/mean(co2.em
 ```
 The data seems to suggest that the countries with the worst energy efficiency scores (as an average between 1992 and 2011) are China and South Africa with Brazil being the most efficient.
 
-###GDP <b>THIS IS MISSING THE LAST COLUMN</b>
+###GDP (in thousands)
 ```{r}
-wdi.df %>% group_by(country.code) %>% summarise(avg=mean(GDP), median=median(GDP), sd=sd(GDP), max=max(GDP),min=min(GDP))
+wdi.df %>% group_by(country.code) %>% summarise(avg=mean(GDP)/1000, median=median(GDP)/1000, sd=sd(GDP)/1000, max=max(GDP)/1000,min=min(GDP)/1000)
 ```
+China has the biggest GPD among BRICS countries. The minimum Chinese GDP was similar to the Brazilian GDP, however, the maximum one is almost three times the Brazilian GDP.
 
 ###GDP ANNUAL GROWTH
 ```{r}
 wdi.df %>% group_by(country.code) %>% summarise(avg=mean(GDP.growth), median=median(GDP.growth), sd=sd(GDP.growth), max=max(GDP.growth),min=min(GDP.growth))
 ```
-
-The country with the highest average GDP growth between 1992 and 2011 is China (10.5%), a country with a booming economy that has been gaining a close watch from the world's economists [5]. India comes in second (at 6.7%), most likely  due to the steep rise of the country's tech industry.
+The country with the highest average GDP growth between 1992 and 2011 is China (10.5%), a country with a booming economy that has been gaining a close watch from the world's economists [5]. India comes in second (at 6.7%), most likely due to the steep rise of the country's tech industry.
 
 ###POPULATION GROWTH
 ```{r}
 wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.growth), median=median(pop.growth), sd=sd(pop.growth), max=max(pop.growth),min=min(pop.growth))
 ```
 Looking at population growth data it would seem that Russia is the country with the most stable evolution in this aspect but the low variance of this metric tends to gravitate around the tipping point of `0` between positive and negative population growth. On the other hand, South Africa is displaying consistent positive change with the highest average.
+
 ###POPULATION OF 0 TO 14 YEAR-OLDS (%)
 ```{r}
 wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.0.14), median=median(pop.0.14), sd=sd(pop.0.14), max=max(pop.0.14),min=min(pop.0.14))
 ```
+
 ###POPULATION OF 15 TO 64 YEAR-OLDS (%)
 ```{r}
 wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.15.64), median=median(pop.15.64), sd=sd(pop.15.64), max=max(pop.15.64),min=min(pop.15.64))
 ```
-Looking at these two tables 
+Looking at these two tables we can note almost 70% of population in China and Russia are 15 to 64 years old. In the other hand, 34% of population in India and South Africa are 0 to 14 years old.
+
 ###POPULATION TOTAL
 ```{r}
 wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.total), median=median(pop.total), sd=sd(pop.total), max=max(pop.total),min=min(pop.total))
 ```
+BRICS countries are interesting because they have a significant population and are emerging economies. China and India are the two most populous countries in the world. Brazil is 5th and Russia 9th. [6]
+
 ###RURAL POPULATION(%)
 ```{r}
 wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.rural), median=median(pop.rural), sd=sd(pop.rural), max=max(pop.rural),min=min(pop.rural))
@@ -291,12 +316,13 @@ By observing min and max values we can see how China has the biggest change on r
 ```{r}
 wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.urban), median=median(pop.urban), sd=sd(pop.urban), max=max(pop.urban),min=min(pop.urban))
 ```
+
 ###POPULATION DENSITY
 ```{r}
 wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.density), median=median(pop.density), sd=sd(pop.density), max=max(pop.density),min=min(pop.density))
 ```
 
-India, followed by China, are the countries big highest population density.
+India, followed by China, are the countries with the highest population density.
 
 ##Yearly averages in BRICS
 Now we do the same but for every year instead:
@@ -320,9 +346,9 @@ The average of CO2 emissions has remained approximately constant during the 2 de
 ```{r}
 wdi.df %>% group_by(year) %>% summarise(avg=mean(GDP.growth), median=median(GDP.growth), sd=sd(GDP.growth), max=max(GDP.growth),min=min(GDP.growth))
 ```
-###GDP
+###GDP <b>(in thousands)</b>
 ```{r}
-wdi.df %>% group_by(year) %>% summarise(avg=mean(GDP), median=median(GDP), sd=sd(GDP), max=max(GDP),min=min(GDP))
+wdi.df %>% group_by(year) %>% summarise(avg=mean(GDP)/1000, median=median(GDP)/1000, sd=sd(GDP)/1000, max=max(GDP)/1000,min=min(GDP)/1000)
 ```
 ###POPULATION 0 TO 14 YEAR-OLDS (%)
 ```{r}
@@ -359,4 +385,5 @@ wdi.df %>% group_by(year) %>% summarise(avg=mean(pop.density), median=median(pop
 [3] BRICS (Wikipedia), https://en.wikipedia.org/wiki/BRICS
 [4] INTERNATIONAL ENERGY OUTLOOK 2016, https://www.eia.gov/forecasts/ieo/emissions.cfm
 [5] What China's Economic Growth Figures Mean, http://www.nytimes.com/2016/07/15/business/international/china-gdp-economic-growth.html?_r=0
+[6] World Population 2015, United Nations, https://esa.un.org/unpd/wpp/Publications/Files/World_Population_2015_Wallchart.pdf
 
