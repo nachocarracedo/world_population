@@ -379,9 +379,9 @@ wdi.df %>% group_by(year) %>% summarise(avg=mean(pop.density), median=median(pop
 
 ##References
 [1] Investopedia, http://www.investopedia.com/articles/03/042303.asp<br>
-[2] Population Reference Bureau, http://www.prb.org/Publications/Articles/2002/HowManyPeopleHaveEverLivedonEarth.aspx
-[3] BRICS (Wikipedia), https://en.wikipedia.org/wiki/BRICS
-[4] INTERNATIONAL ENERGY OUTLOOK 2016, https://www.eia.gov/forecasts/ieo/emissions.cfm
-[5] What China's Economic Growth Figures Mean, http://www.nytimes.com/2016/07/15/business/international/china-gdp-economic-growth.html?_r=0
-[6] World Population 2015, United Nations, https://esa.un.org/unpd/wpp/Publications/Files/World_Population_2015_Wallchart.pdf
+[2] Population Reference Bureau, http://www.prb.org/Publications/Articles/2002/HowManyPeopleHaveEverLivedonEarth.aspx <br>
+[3] BRICS (Wikipedia), https://en.wikipedia.org/wiki/BRICS <br>
+[4] INTERNATIONAL ENERGY OUTLOOK 2016, https://www.eia.gov/forecasts/ieo/emissions.cfm <br>
+[5] What China's Economic Growth Figures Mean, http://www.nytimes.com/2016/07/15/business/international/china-gdp-economic-growth.html?_r=0 <br>
+[6] World Population 2015, United Nations, https://esa.un.org/unpd/wpp/Publications/Files/World_Population_2015_Wallchart.pdf <br>
 
