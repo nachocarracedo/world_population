@@ -25,8 +25,8 @@ The world has seen some major shifts in the landscapes of politics, economy and 
 Forces of change such as the ones presented so far are, however, unexpected and hard to predict. However, if there is one force of world change that has been relatively consistent since the beginning of mankind it would have to be population growth. Data from the Population Reference Bureau [2] has attempted to model an answer for the question "How many people have ever lived on Earth?" and started by mapping out the human population (as a best estimate) at a few checkpoint moments throughout human history as can be seen below.
 
 ```{r, echo=FALSE}
-setwd("C:/Users/Nestor/Documents/MSBA/3 FALL 2016/MA402/Project/world_population-master")
-read.csv('Data/popdata.csv', header=TRUE)
+#setwd("C:/Users/carrai1/Desktop/Master/MA402_Data_Science/Assigment_1")
+#read.csv('Data/popdata.csv', header=TRUE)
 ```
 <i>The first column represents the year, the second column represent the estimated population on Earth at that point in time, the third column represents the estimate number of births per one thousand people, the fourth column  represents the number of births between the current in-line year and the previous benchmark point.</i><br>
 
@@ -91,7 +91,7 @@ Next, each one of the indicators of interest are read into its respective data f
 # disable scientific notation. Easiear to read
 options(scipen=999)
 # Read each one fo the indicators into a data frame from the downloaded CSV files (remove manuall first 3 lines of cvs)
-#setwd("C:/Users/carrai1/Desktop/Master/MA402_Data_Science/Assigment_1/")
+setwd("C:/Users/carrai1/Desktop/Master/MA402_Data_Science/Assigment_1/")
 pop0.df = read_csv("./data/%_population_0_14_60_15.csv")
 pop15.df = read_csv("./data/%_population_15_64_60_15.csv")
 poprur.df= read_csv("./data/%_rural_population_60_15.csv")
@@ -188,7 +188,7 @@ wdi.df %>% mutate(., pop.density = pop.total / surface.km2) -> wdi.df
 wdi.df$surface.km2 <- NULL
 ```
 
-Next, we generate quantiles for each indicator and store it in a different indicator with the same name and `.q` a the end for future use.
+Next, we generate quantiles for each indicator and store it in a different indicator with the same name and `.q`:
 ```{r}
 #get quantiles for all indicators and usen the name of the column + .q
 make.ntiles = function (inputvar, n) { 
@@ -322,60 +322,22 @@ wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.density), median=me
 
 India, followed by China, are the countries with the highest population density.
 
-##Yearly averages in BRICS
-Now we do the same but for every year instead:
+###OTHER SUMMARIES
 
-
-###ENERGY USE ACROSS TIME
+What countries have had the biggest (top quartile) GOP growth and in which years? :
 ```{r}
-wdi.df %>% group_by(year) %>% summarise(avg=mean(energy.use), median=median(energy.use), sd=sd(energy.use), max=max(energy.use),min=min(energy.use))
+wdi.df %>% filter(., GDP.growth.q == 'Q4') %>% select(., country.code, year, GDP.growth, GDP) %>% as.data.frame
 ```
 
-As expected, being the countries emerging powers, the energy use has an upward trend through the years.
+China has been in the top quantile most of the years (not in 1998, 1999, 2001). India started showing up recently and Russia was at the top quantile in 2000 and 2007.
 
-###CO2 EMISSIONS
+What countries and in which years have had urban population in the top quartile? :
 ```{r}
-wdi.df %>% group_by(year) %>% summarise(avg=mean(co2.emission), median=median(co2.emission), sd=sd(co2.emission), max=max(co2.emission),min=min(co2.emission))
+wdi.df %>% filter(., pop.urban.q == 'Q4') %>% select(., country.code, year, pop.urban, pop.urban.q, pop.rural, pop.rural.q) %>% as.data.frame
 ```
 
-The average of CO2 emissions has remained approximately constant during the 2 decades under study.
+As we can see Brazil has been on top of urban population for all 20 years, whereas Russia entered the top quartile after 2007. 
 
-###GDP ANNUAL GROWTH
-```{r}
-wdi.df %>% group_by(year) %>% summarise(avg=mean(GDP.growth), median=median(GDP.growth), sd=sd(GDP.growth), max=max(GDP.growth),min=min(GDP.growth))
-```
-###GDP <b>(in thousands)</b>
-```{r}
-wdi.df %>% group_by(year) %>% summarise(avg=mean(GDP)/1000, median=median(GDP)/1000, sd=sd(GDP)/1000, max=max(GDP)/1000,min=min(GDP)/1000)
-```
-###POPULATION 0 TO 14 YEAR-OLDS (%)
-```{r}
-wdi.df %>% group_by(year) %>% summarise(avg=mean(pop.0.14), median=median(pop.0.14), sd=sd(pop.0.14), max=max(pop.0.14),min=min(pop.0.14))
-```
-###POPULATION 15 TO 64 YEAR-OLDS (%)
-```{r}
-wdi.df %>% group_by(year) %>% summarise(avg=mean(pop.15.64), median=median(pop.15.64), sd=sd(pop.15.64), max=max(pop.15.64),min=min(pop.15.64))
-```
-###POPULATION GROWTH
-```{r}
-wdi.df %>% group_by(year) %>% summarise(avg=mean(pop.growth), median=median(pop.growth), sd=sd(pop.growth), max=max(pop.growth),min=min(pop.growth))
-```
-###POPULATION TOTAL
-```{r}
-wdi.df %>% group_by(year) %>% summarise(avg=mean(pop.total), median=median(pop.total), sd=sd(pop.total), max=max(pop.total),min=min(pop.total))
-```
-###RURAL POPULATION (%)
-```{r}
-wdi.df %>% group_by(year) %>% summarise(avg=mean(pop.rural), median=median(pop.rural), sd=sd(pop.rural), max=max(pop.rural),min=min(pop.rural))
-```
-###URBAN POPULATION (%)
-```{r}
-wdi.df %>% group_by(year) %>% summarise(avg=mean(pop.urban), median=median(pop.urban), sd=sd(pop.urban), max=max(pop.urban),min=min(pop.urban))
-```
-###POPULATION DENSITY
-```{r}
-wdi.df %>% group_by(year) %>% summarise(avg=mean(pop.density), median=median(pop.density), sd=sd(pop.density), max=max(pop.density),min=min(pop.density))
-```
 
 ##References
 [1] Investopedia, http://www.investopedia.com/articles/03/042303.asp<br>
