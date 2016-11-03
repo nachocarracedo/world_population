@@ -12,7 +12,7 @@ output:
 <center><img src="http://youth4c.org/wp-content/uploads/2015/03/The-World-Bank-logo.png" width="500"></img></center><br>
 
 #INTRODUCTION
-The World Bank is an international organization that aims to defeat poverty in the world (specifically in countries with low to medium income) through means of training, development and loan offerings to countries so that they may "help countries help themselves"[1]. Started in 1944 as an initiative after World War II to rebuild a torn Europe (where the International Bank for Reconstruction and Development was also started), the World Bank currently offers several financial products and services such as:
+The World Bank is an international organization that aims to defeat poverty in the world (specifically in countries with low to medium income) through means of training, development and loan offerings to countries so that they may "help countries help themselves" [1]. Started in 1944 as an initiative after World War II to rebuild a torn Europe (where the International Bank for Reconstruction and Development was also started), the World Bank currently offers several financial products and services such as:
 
 <ul>
   <li>low interest loans</li>
@@ -23,28 +23,31 @@ The World Bank is an international organization that aims to defeat poverty in t
 
 The World Bank also offers policy advice, technical assistance and research and analysis. Knowledge sharing is one of the means through which the organization aims to achieve its goals. As such, it also offers fund and partnerships for organizing conferences and hosting forums that discuss issues like the development of countries, poverty and socio-economic innovation.
 
-The organization focuses on delivering measurable results and in order to do that it leads a powerful initiative for open development and access to information. This consists of free access to tools and data that spans over more than 50 years for several macroeconomic and microeconomic factors for countries from all over the globe. 
+The organization focuses on delivering measurable results and in order to do that it leads a powerful initiative for open development and access to information. This consists of access to tools and data that spans over more than 50 years for macroeconomic and microeconomic factors for countries from all over the globe. 
 
 #OBJECTIVES
 The world has seen some major shifts in the landscapes of politics, economy and society in the past 10 to 20 years. From the tragic events of September 11 in 2001 and the financial crisis of 2008 to the increasing gap in income equality and the rise of the internet as a universal digital medium, the world that has rebuilt after the second World War is anything if not a dynamic one. Social-economic interconnections (also known as economic globalization) has allowed for these changes to more easily scatter and disseminate all over the world.<br><br>
 Forces of change such as the ones presented so far are unexpected and hard to predict. However, if there is one force of world change that has been relatively consistent since the beginning of mankind it would have to be population growth. Data from the Population Reference Bureau [2] has attempted to model an answer for the question "How many people have ever lived on Earth?" and started by mapping out the human population (as a best estimate) at a few checkpoint moments throughout human history as can be seen below.
 
 ```{r, echo=FALSE}
-#setwd("C:/Users/Ross DeWitt/Documents/GitHub/MA799_Project1/world_population")
-setwd("C:/Users/carrai1/Desktop/Master/MA402_Data_Science/Assigment_1/")
+setwd("C:/Users/Ross DeWitt/Documents/GitHub/MA799_Project1/world_population")
+#setwd("C:/Users/carrai1/Desktop/Master/MA402_Data_Science/Assigment_1/")
 read.csv('Data/popdata.csv', header=TRUE)
 ```
 <i>The first column represents the year, the second column represent the estimated population on Earth at that point in time, the third column represents the estimate number of births per one thousand people, the fourth column  represents the number of births between the current in-line year and the previous benchmark point.</i><br>
 
 What is clear from this table is that the population on Earth seems to be headed in an upwards direction and it therefore poses the question: With the certainty of human population growing, how has this impacted the world we live in?
-<br><br>The goal of this paper is to study population growth in emergent economy countries with a significant population (more specifically BRICS[3]) and analyze how this growth impacts other variables such as CO2 emissions and energy use as well as researching the evolution of such factors across emerging economies through time. It is safe to assume that not all countries are impacted by population growth in the same way but, if anything, this creates an opportunity for digging into an interesting topic and revealing insightful results. We have chosen to study the BRICS countries because in an effort to reveal possible connections in the data, these countries present highly dynamic changes and a shifting landscape that can help shed a light on the questions we look to answer. If any set of countries can make connections clearer, it would have to be the BRICS.<br>
+<br><br>The goal of this paper is to study population growth in emergent economy contries (more specifically BRICS[3]) and analyze how this growth changes along with variables such as CO2 emissions and energy use as well as taking a glimpse into the evolution of such factors across emerging economies through time. It is safe to assume that not all countries are impacted by population growth in the same way but, if anything, this creates an opportunity for digging into an interesting topic and revealing insightful results. We have chosen to study the BRICS countries because in an effort to reveal possible connections in the data, these countries present highly dynamic changes and a shifting landscape that can help shed a light on the questions we look to answer. If any set of countries can make connections clearer, it would have to be the BRICS.<br>
 Other than studying population growth we also look to answer questions that include:
 
 <ul>
-  <li>Can the growth in CO2 emissions be explained by population growth? If the information is analyzed per capita among certain locations, how do these locations or areas differ in CO2 emissions? </li>
-  <li>What are the countries that present consistent negative GDP growth in the past years?</li>
-  <li>How does the population of 0 to 14 year old vary against the population aged between 15 and 64? How do populations metrics shift and is there a noticeable trend?</li>
+  <li>What are the countries that present consistent positive GDP growth in the past years? Which countries have not been as succesful?</li>
+  <li>What are the countries with the highest CO2 Emissions? Which ones are on their way to efficient use of energy?</li>
+  <li>How does the population of 0 to 14 year olds vary against the population aged between 15 and 64? How do populations metrics shift?</li>
+  <li>How do the two age groups affect the country's economic well-being?</li>
+  <li>How does population density look in these countries?</li>
 </ul>
+<br><br>
 
 #DATASET DESCRIPTION
 As previously mentioned, The World Bank offers easy access to its publicly available data sets that contain information on a wide array of country indicators for each year where collection of that data was possible. These indicators cover different economic, political, geographical and social metrics that help paint a picture of countries all over the world. 
@@ -87,6 +90,8 @@ We create a single data set using the following process:
 * Merge all variables of interest into a single dataset.
 * Remove years where data is not available for all metrics we have chosen.
 
+<br><br>
+
 #DATASET PREPARATION
 
 To get the final data set we create a script that does the following:
@@ -115,7 +120,7 @@ Next, each one of the indicators of interest are read into their respective data
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 # disable scientific notation. Easiear to read
 options(scipen=999)
-# Read each one fo the indicators into a data frame from the downloaded CSV files (remove manuall first 3 lines of cvs)
+# Read each one fo the indicators into a data frame from the downloaded CSV files (remove manuall first 3 lines of csv)
 pop0.df = read_csv("./data/%_population_0_14_60_15.csv")
 pop15.df = read_csv("./data/%_population_15_64_60_15.csv")
 poprur.df= read_csv("./data/%_rural_population_60_15.csv")
@@ -129,7 +134,7 @@ gdp_growth.df= read_csv("./data/GDP_growth_annual%.csv")
 gdp.df= read_csv("./data/GDP.csv")
 ```
 
-All data frames are now put into a list to be able to loop the list and concatenate the indicators:
+All data frames are now put into a list to be able to loop through it and concatenate the indicators:
 ```{r}
 all.list <- list(pop0.df,pop15.df,poprur.df,popur.df,co2.df,kmsqr.df,
                  popgrowth.df,poptotal.df,energy.df,gdp_growth.df,gdp.df)
@@ -152,7 +157,7 @@ for (aux.df in all.list){
 }
 ```
 
-Now we have a single data frame with all the indicators. We Convert the `indicator.code`, `country.code` variables into factors and the `year` variable into an ordered factor:
+Now we have a single data frame with all the indicators. We convert the `indicator.code`, `country.code` variables into factors and the `year` variable into an ordered factor:
 ```{r}
 wdi.df$indicator.code = factor(wdi.df$indicator.code)
 wdi.df$country.code = factor(wdi.df$country.code)
@@ -164,7 +169,7 @@ wdi.df <- filter(wdi.df, year!="X61")
 wdi.df <- filter(wdi.df, country.code!="INX")
 ```
 
-At this point we check the data set for missing values based on `year`. We show the code but not the output due to its length and many iterations. After the reseach we find that the years from 1992 to 2011 don't have missing values for our countries of interest:
+At this point we check the data set for missing values based on `year`. We show the code but not the output due to its length and many iterations. After looking into the results we find that the data for the years 1992 to 2011 doesn't have any missing values for our countries of interest:
 
 ```{r,eval=FALSE}
 # Display the years sorted by the percent of missing values for all measurements for that year
@@ -267,43 +272,52 @@ Next, we'll calculate the mean, median, standard deviation, minimum, and maximum
 
 ###ENERGY USE
 ```{r, warning=FALSE,message=FALSE}
-wdi.df %>% group_by(country.code) %>% summarise(avg=mean(energy.use), median=median(energy.use), sd=sd(energy.use), max=max(energy.use),min=min(energy.use))
+wdi.df %>% group_by(country.code) %>% summarise(avg=mean(energy.use), 
+      median=median(energy.use), sd=sd(energy.use), max=max(energy.use),min=min(energy.use))
 ```
 As can be seen from this table, regardless of variation across data from 20 years (looking at minimum and maximum values achieved), countries tend to remain in their own relative brackets of energy consumption with Russia leading the numbers while India consistently being the lowest energy consumer among the 5.
 
 ###CO2 EMISSIONS
 ```{r}
-wdi.df %>% group_by(country.code) %>% summarise(avg=mean(co2.emission), median=median(co2.emission), sd=sd(co2.emission), max=max(co2.emission),min=min(co2.emission))
+wdi.df %>% group_by(country.code) %>% summarise(avg=mean(co2.emission),
+  median=median(co2.emission),sd=sd(co2.emission), max=max(co2.emission),min=min(co2.emission))
 ```
 It is interesting to see that, for the most part, the level of energy consumption rank for a country is indicative of its CO2 emissions score (in metric tons per capita). This relationship is a non-trivial one and it is one of the reasons energy consumption is a hot topic at the center of the climate change debate [4]. Looking at the ratios between consumption and emissions we can get a hint at a rough estimate for relative energy efficiency (<i>Lower values mean lower efficiency</i>).
 ```{r}
-wdi.df %>% group_by(country.code) %>% summarise(avg=mean(energy.use)/mean(co2.emission), median=median(energy.use)/median(co2.emission), sd=sd(energy.use)/sd(co2.emission), max=max(energy.use)/max(co2.emission),min=min(energy.use)/min(co2.emission))
+wdi.df %>% group_by(country.code) %>% summarise(avg=mean(energy.use)/mean(co2.emission),
+                                                median=median(energy.use)/median(co2.emission), 
+                                                sd=sd(energy.use)/sd(co2.emission),
+        max=max(energy.use)/max(co2.emission),min=min(energy.use)/min(co2.emission))
 ```
 The data seems to suggest that the countries with the worst energy efficiency scores (as an average between 1992 and 2011) are China and South Africa with Brazil being the most efficient. CO2 emissions are generally intuitively correlated with the economic development level of a country, from direct sources such as economic sectors for: Agriculture, Industry, Transportation, Electricity and Residential & Commercial [7]. To get a sense of a country's level of economic development we take a look at country-specific GDPs.
 
 ###GDP (in thousands)
 ```{r}
-wdi.df %>% group_by(country.code) %>% summarise(avg=mean(GDP)/1000, median=median(GDP)/1000, sd=sd(GDP)/1000, max=max(GDP)/1000,min=min(GDP)/1000)
+wdi.df %>% group_by(country.code) %>% summarise(avg=mean(GDP)/1000, median=median(GDP)/1000, 
+                                      sd=sd(GDP)/1000, max=max(GDP)/1000,min=min(GDP)/1000)
 ```
 What's immediately noticeable is that China has the biggest average GPD among BRICS countries across the 20 years that we are studying. However, what's also interesting is that there's large variation in the data in this period (the min-max range is relatively high with high standard deviation in the data). The minimum Chinese GDP is similar to the Brazilian GDP, however, the maximum GDP achieved is almost three times the maximum GDP achieved by Brazil. To get a bigger picture of this, let's take a look at annual GDP growth.
 
 ###GDP ANNUAL GROWTH
 ```{r}
-wdi.df %>% group_by(country.code) %>% summarise(avg=mean(GDP.growth), median=median(GDP.growth), sd=sd(GDP.growth), max=max(GDP.growth),min=min(GDP.growth))
+wdi.df %>% group_by(country.code) %>% summarise(avg=mean(GDP.growth), median=median(GDP.growth),
+                                sd=sd(GDP.growth), max=max(GDP.growth),min=min(GDP.growth))
 ```
 The country with the highest average GDP growth between 1992 and 2011 is China (10.5%), a country with a booming economy that has been gaining a close watch from the world's economists [5]. India comes in second (at 6.7%), most likely due to the steep rise of the country's tech industry.<br><br>
 This data helps explain the gaps in economic development across 20 years that we have noticed when analyzing just the GDP. We would expect to see a country's GDP rise due to a very succesful Economic sector or due to scalability of that perfomance nourished by a rise in a country's population. For that, we turn to analyzing the population growth in the BRICS countries.
 
 ###POPULATION GROWTH
 ```{r}
-wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.growth), median=median(pop.growth), sd=sd(pop.growth), max=max(pop.growth),min=min(pop.growth))
+wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.growth), median=median(pop.growth),
+                                    sd=sd(pop.growth), max=max(pop.growth),min=min(pop.growth))
 ```
 Looking at population growth data it would seem that Russia is the country with the most stable evolution in this aspect but the low variance of this metric tends to gravitate around the tipping point of `0` between positive and negative population growth. On the other hand, South Africa is displaying consistent positive change with the highest average.<br><br>
 Furthermore, at a first glance we can say that population growth does not help us explain the success that countries like China and India have had in terms of GDP growth. At the very least, we can assume that population growth is more impactful in explaining GDP growth in some countries more than in others and that there are factors (e.g. political instability, trade deals, entrepreneurial stimulus) that we are not considering in this paper. Since we are on the topic of population we now take a look at the distribution of age groups.
 
 ###POPULATION OF 0 TO 14 YEAR-OLDS (%)
 ```{r}
-wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.0.14), median=median(pop.0.14), sd=sd(pop.0.14), max=max(pop.0.14),min=min(pop.0.14))
+wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.0.14), median=median(pop.0.14),
+                                        sd=sd(pop.0.14), max=max(pop.0.14),min=min(pop.0.14))
 ```
 
 ###POPULATION OF 15 TO 64 YEAR-OLDS (%)
@@ -320,7 +334,7 @@ Despite the fact that population growth did not help us better understand GDP or
 wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.total), median=median(pop.total), 
                                       sd=sd(pop.total), max=max(pop.total), min=min(pop.total))
 ```
-As emerging economies, BRICS countries garner a significant population. China and India have represented the two most populous countries in the world with Brazil being the 5th and Russia 9th [6]. The table shows that despite the fact that China has been the most populated country, on average between 1992 and 2011, India has had the biggest change in sheer numbers. India is considered to be rapidly catching up with China in this regard, possibly as soon as 2022 [8]
+As emerging economies, BRICS countries garner a significant population. China and India have represented the two most populous countries in the world with Brazil being the 5th and Russia 9th [6]. The table shows that despite the fact that China has been the most populated country, on average between 1992 and 2011, India has had the biggest change in sheer numbers. India is considered to be rapidly catching up with China in this regard, possibly as soon as 2022. [8]
 
 ###RURAL POPULATION(%)
 ```{r}
@@ -357,7 +371,7 @@ What are the countries that have had the lowest GDP growth and when? :
 wdi.df %>% filter(., GDP.growth.q == 'Q1') %>% select(., country.code, year, GDP.growth, GDP) %>% as.data.frame
 ```
 
-Brazil, Russia, and South Africa had some years where their GDP growth was very low (within BRICS) but what stands out are the high negative values in Russia between 1992 and 1994 and also in 2009.
+Brazil, Russia, and South Africa have had some years where their GDP growth was very low (within BRICS) but what stands out are the high negative values in Russia between 1992 and 1994 as well as 2009. These extremely low values can be attributed to the dissolution of the Soviet Union in 1991, and the financial crysis of 2007 - 2008.
 
 What countries have had ratios of urban population in the top quartile and when? :
 ```{r}
@@ -373,8 +387,7 @@ As we can see Brazil has dominated the chart for ratio of urban population in al
 [4] INTERNATIONAL ENERGY OUTLOOK 2016,<br> https://www.eia.gov/forecasts/ieo/emissions.cfm <br>
 [5] What China's Economic Growth Figures Mean,<br> http://www.nytimes.com/2016/07/15/business/international/china-gdp-economic-growth.html?_r=0 <br>
 [6] World Population 2015, United Nations,<br> https://esa.un.org/unpd/wpp/Publications/Files/World_Population_2015_Wallchart.pdf <br>
-[7] Industrial Emissions in the United States,<br> http://www.c2es.org/energy/use/industrial
+[7] Industrial Emissions in the United States,<br> http://www.c2es.org/energy/use/industrial<br>
 [8] This country will have more people than China by 2022,<br> http://money.cnn.com/2015/07/30/news/economy/india-china-population/<br>
 [9] Urbanization in China<br>
 https://en.wikipedia.org/wiki/Urbanization_in_China
-
