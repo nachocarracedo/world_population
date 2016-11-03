@@ -2,7 +2,12 @@
 title: "World Bank Data Analysis"
 author: "Constantin Rusu, Ignacio Carracedo, Nestor Gallo, Avi Subramaniam"
 date: "October 31, 2016"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_depth: 2
+    theme: spacelab
+    toc_float: TRUE
 ---
 <center><img src="http://youth4c.org/wp-content/uploads/2015/03/The-World-Bank-logo.png" width="500"></img></center><br>
 
@@ -25,13 +30,13 @@ The world has seen some major shifts in the landscapes of politics, economy and 
 Forces of change such as the ones presented so far are, however, unexpected and hard to predict. However, if there is one force of world change that has been relatively consistent since the beginning of mankind it would have to be population growth. Data from the Population Reference Bureau [2] has attempted to model an answer for the question "How many people have ever lived on Earth?" and started by mapping out the human population (as a best estimate) at a few checkpoint moments throughout human history as can be seen below.
 
 ```{r, echo=FALSE}
-#setwd("C:/Users/carrai1/Desktop/Master/MA402_Data_Science/Assigment_1")
-#read.csv('Data/popdata.csv', header=TRUE)
+setwd("C:/Users/Ross DeWitt/Documents/GitHub/MA799_Project1/world_population")
+read.csv('Data/popdata.csv', header=TRUE)
 ```
 <i>The first column represents the year, the second column represent the estimated population on Earth at that point in time, the third column represents the estimate number of births per one thousand people, the fourth column  represents the number of births between the current in-line year and the previous benchmark point.</i><br>
 
 What is clear from this table is that the population on Earth seems to be headed in an upwards direction and it therefore poses the question: With the certainty of human population growing, how has this impacted the world we live in?
-<br><br>The goal of this paper is to study population growth in emergent economy countries with a significant population (more specifically BRICS[3]) and analyze how this growth impacts other variables such as CO2 emissions and energy use as well as researching the evolution of such factors across emerging economies through time. It is safe to assume that not all countries are impacted by population growth in the same way but, if anything, this creates an opportunity for digging into an interesting topic and revealing insightful results.<br>
+<br><br>The goal of this paper is to study population growth in emergent economy countries with a significant population (more specifically BRICS[3]) and analyze how this growth impacts other variables such as CO2 emissions and energy use as well as researching the evolution of such factors across emerging economies through time. It is safe to assume that not all countries are impacted by population growth in the same way but, if anything, this creates an opportunity for digging into an interesting topic and revealing insightful results. We have chosen to study the BRICS countries because in an effort to reveal possible connections in the data, these countries present highly dynamic changes and a shifting landscape that can help shed a light on the questions we look to answer. If any set of countries can make connections clearer, it would have to be the BRICS.<br>
 Other than studying population growth we also look to answer questions that include:
 
 <ul>
@@ -57,6 +62,25 @@ Considering the aforementioned objectives and scope, for this report we select 1
 * GDP annual growth
 * Surface area
 
+Our final data set will have 13 variables. Two of them are for the country and year of evaluation, the other 11 variables are indicators. Population density is a variable we will create based on the total population and surface area of BRICS countries.The description of our target list of variables is as follows:
+
+Variable Name | Variable Description | Unit
+-----------------|-------------------------|--------------------------
+country.code | Country code for every BRICS country | 3 capital letters 
+year | From 1992 to 2011 | year 
+energy.use  | Energy use | kg of oil equivalent per capita
+co2.emision | CO2 emisions | metric tons per capita 
+GDP         | Gross Domestic Product | current US$ 
+GDP.growth  | Gross Domestic Product Growth | annual % 
+pop.0.14    | Population ages 0-14 | % of total 
+pop.15.64   | Population ages 15-64 | % of total 
+pop.growth  | Population growth | annual % 
+pop.total   | Total population | numeric 
+pop.rural   | Rural population | % of total population 
+pop.urban   | Urban population | % of total population 
+pop.density | Population per square meter | numeric
+
+
 We create a single data set using the following process:
 
 * Merge all variables of interest into a single dataset.
@@ -66,14 +90,14 @@ We create a single data set using the following process:
 
 To get the final data set we create a script that does the following:
 
-* Reading the `CSV` files of all the 11 indicators
-* Renaming variables
-* Converting year into a column
-* Concatenating all 11 indicators into one `data.frame` which make it easier to check missing values.
-* Selecting specific years and countries
-* Checking for missing values
+* Reads the `CSV` files of all the 11 indicators
+* Renames variables
+* Converts year into a column
+* Concatenates all 11 indicators into one `data.frame` which makes it easier to check for missing values
+* Selects specific years and countries
+* Checks for missing values
 
-First we load the WDI, readr and dplyr libraries:
+First we load the `WDI`, `readr` and `dplyr` libraries:
 ```{r, message=FALSE, warning=FALSE}
 library(WDI)
 library(readr)
@@ -86,12 +110,12 @@ The descriptions of these packages are as follows:<br>
 <li>`dplyr` - A Grammar of Data Manipulation. A fast, consistent tool for working with data frame like objects, both in memory and out of memory.</li>
 <li>`tidyr` - An evolution of 'reshape2'. It's designed specifically for data tidying (not general reshaping or aggregating) and works well with 'dplyr' data pipelines.</li>
 </ul>
-Next, each one of the indicators of interest are read into its respective data frame from the downloaded CSV files.
+Next, each one of the indicators of interest are read into their respective data frame from the downloaded `CSV` files.
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 # disable scientific notation. Easiear to read
 options(scipen=999)
 # Read each one fo the indicators into a data frame from the downloaded CSV files (remove manuall first 3 lines of cvs)
-setwd("C:/Users/carrai1/Desktop/Master/MA402_Data_Science/Assigment_1/")
+#setwd("C:/Users/carrai1/Desktop/Master/MA402_Data_Science/Assigment_1/")
 pop0.df = read_csv("./data/%_population_0_14_60_15.csv")
 pop15.df = read_csv("./data/%_population_15_64_60_15.csv")
 poprur.df= read_csv("./data/%_rural_population_60_15.csv")
@@ -110,7 +134,7 @@ All data frames are now put into a list.
 all.list <- list(pop0.df,pop15.df,poprur.df,popur.df,co2.df,kmsqr.df,
                  popgrowth.df,poptotal.df,energy.df,gdp_growth.df,gdp.df)
 ```
-we create a `data.frame` called `wdi.df`. Then we loop every indicator data frame and:
+We create a `data.frame` called `wdi.df`. Then we loop every indicator-specific data frame and continue to:
 
 * Rename columns
 * Use function `gather` to set `year` and `value` of the indicator into a column. This will facilitate exploring missing values.
@@ -128,7 +152,7 @@ for (aux.df in all.list){
 }
 ```
 
-Now we have a single data frame will all the indicators. We Convert the `indicator.code`, `country.code` variables into factors and the `year` variable into an ordered factor:
+Now we have a single data frame with all the indicators. We Convert the `indicator.code`, `country.code` variables into factors and the `year` variable into an ordered factor:
 ```{r}
 wdi.df$indicator.code = factor(wdi.df$indicator.code)
 wdi.df$country.code = factor(wdi.df$country.code)
@@ -188,7 +212,7 @@ wdi.df %>% mutate(., pop.density = pop.total / surface.km2) -> wdi.df
 wdi.df$surface.km2 <- NULL
 ```
 
-Next, we generate quantiles for each indicator and store it in a different indicator with the same name and `.q`:
+Next, we generate quantiles for each indicator and store it in a different indicator with the same name and a `.q` at the end it. The quantiles will be used for our second part of data analysis:
 ```{r}
 #get quantiles for all indicators and usen the name of the column + .q
 make.ntiles = function (inputvar, n) { 
@@ -219,26 +243,6 @@ wdi.df %>%  mutate(energy.use.q = make.ntiles(energy.use, 4 ),
 
 Now that we have a clean dataset to work with we move on to our analysis.
 
-#VARIABLE DESCRIPTION
-
-Our final data set has 13 variables. Two of them are for the country and year of evaluation, the other 11 variables are indicators. Population density is a variable we created based on the total population and surface area of BRICS countries.
-
-Variable Name | Variable Description | Unit
---------------|------|--------------
-country.code | Country code for every BRICS country | 3 capital letters 
-year | From 1992 to 2011 | year 
-energy.use  | Energy use | kg of oil equivalent per capita
-co2.emision | CO2 emisions | metric tons per capita 
-GDP         | Gross Domestic Product | current US$ 
-GDP.growth  | Gross Domestic Product Growth | annual % 
-pop.0.14    | Population ages 0-14 | % of total 
-pop.15.64   | Population ages 15-64 | % of total 
-pop.growth  | Population growth | annual % 
-pop.total   | Total population | numeric 
-pop.rural   | Rural population | % of total population 
-pop.urban   | Urban population | % of total population 
-pop.density | population per square meter | numeric
-
 #VARIABLE SUMMARIES
 
 First, we take a quick glance at summary statistics for each indicator that we have included in this study:
@@ -249,7 +253,7 @@ indicators <- c("energy.use", "co2.emission","GDP", "GDP.growth", "pop.0.14", "p
 summary(wdi.df[indicators])
 ```
 
-##Per country averages and statistics
+##Country Averages and Statistics
 Next, we'll calculate the mean, median, standard deviation, minimum, and maximum of each indicator code per country:
 
 ###ENERGY USE
@@ -262,29 +266,31 @@ As can be seen from this table, regardless of variation across data from 20 year
 ```{r}
 wdi.df %>% group_by(country.code) %>% summarise(avg=mean(co2.emission), median=median(co2.emission), sd=sd(co2.emission), max=max(co2.emission),min=min(co2.emission))
 ```
-It is interesting to see that, for the most part, the level of energy consumption rank for a country is indicative of its CO2 emissions score (in metric tons per capita). This relationship is a non-trivial one and it is one of the reasons energy consumption is a hot topic at the center of the climate change debate [4]. Looking at the ratios between consumption and emissions we can get a hint at a rough estimate for relative energy efficiency (<i>Lower values mean lower efficiency.</i>).
+It is interesting to see that, for the most part, the level of energy consumption rank for a country is indicative of its CO2 emissions score (in metric tons per capita). This relationship is a non-trivial one and it is one of the reasons energy consumption is a hot topic at the center of the climate change debate [4]. Looking at the ratios between consumption and emissions we can get a hint at a rough estimate for relative energy efficiency (<i>Lower values mean lower efficiency</i>).
 ```{r}
 wdi.df %>% group_by(country.code) %>% summarise(avg=mean(energy.use)/mean(co2.emission), median=median(energy.use)/median(co2.emission), sd=sd(energy.use)/sd(co2.emission), max=max(energy.use)/max(co2.emission),min=min(energy.use)/min(co2.emission))
 ```
-The data seems to suggest that the countries with the worst energy efficiency scores (as an average between 1992 and 2011) are China and South Africa with Brazil being the most efficient.
+The data seems to suggest that the countries with the worst energy efficiency scores (as an average between 1992 and 2011) are China and South Africa with Brazil being the most efficient. CO2 emissions are generally intuitively correlated with the economic development level of a country, from direct sources such as economic sectors for: Agriculture, Industry, Transportation, Electricity and Residential & Commercial [7]. To get a sense of a country's level of economic development we take a look at country-specific GDPs.
 
 ###GDP (in thousands)
 ```{r}
 wdi.df %>% group_by(country.code) %>% summarise(avg=mean(GDP)/1000, median=median(GDP)/1000, sd=sd(GDP)/1000, max=max(GDP)/1000,min=min(GDP)/1000)
 ```
-China has the biggest GPD among BRICS countries. The minimum Chinese GDP was similar to the Brazilian GDP, however, the maximum one is almost three times the Brazilian GDP.
+What's immediately noticeable is that China has the biggest average GPD among BRICS countries across the 20 years that we are studying. However, what's also interesting is that there's large variation in the data in this period (the min-max range is relatively high with high standard deviation in the data). The minimum Chinese GDP is similar to the Brazilian GDP, however, the maximum GDP achieved is almost three times the maximum GDP achieved by Brazil. To get a bigger picture of this, let's take a look at annual GDP growth.
 
 ###GDP ANNUAL GROWTH
 ```{r}
 wdi.df %>% group_by(country.code) %>% summarise(avg=mean(GDP.growth), median=median(GDP.growth), sd=sd(GDP.growth), max=max(GDP.growth),min=min(GDP.growth))
 ```
-The country with the highest average GDP growth between 1992 and 2011 is China (10.5%), a country with a booming economy that has been gaining a close watch from the world's economists [5]. India comes in second (at 6.7%), most likely due to the steep rise of the country's tech industry.
+The country with the highest average GDP growth between 1992 and 2011 is China (10.5%), a country with a booming economy that has been gaining a close watch from the world's economists [5]. India comes in second (at 6.7%), most likely due to the steep rise of the country's tech industry.<br><br>
+This data helps explain the gaps in economic development across 20 years that we have noticed when analyzing just the GDP. We would expect to see a country's GDP rise due to a very succesful Economic sector or due to scalability of that perfomance nourished by a rise in a country's population. For that, we turn to analyzing the population growth in the BRICS countries.
 
 ###POPULATION GROWTH
 ```{r}
 wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.growth), median=median(pop.growth), sd=sd(pop.growth), max=max(pop.growth),min=min(pop.growth))
 ```
-Looking at population growth data it would seem that Russia is the country with the most stable evolution in this aspect but the low variance of this metric tends to gravitate around the tipping point of `0` between positive and negative population growth. On the other hand, South Africa is displaying consistent positive change with the highest average.
+Looking at population growth data it would seem that Russia is the country with the most stable evolution in this aspect but the low variance of this metric tends to gravitate around the tipping point of `0` between positive and negative population growth. On the other hand, South Africa is displaying consistent positive change with the highest average.<br><br>
+Furthermore, at a first glance we can say that population growth does not help us explain the success that countries like China and India have had in terms of GDP growth. At the very least, we can assume that population growth is more impactful in explaining GDP growth in some countries more than in others and that there are factors (e.g. political instability, trade deals, entrepreneurial stimulus) that we are not considering in this paper. Since we are on the topic of population we now take a look at the distribution of age groups.
 
 ###POPULATION OF 0 TO 14 YEAR-OLDS (%)
 ```{r}
@@ -293,57 +299,66 @@ wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.0.14), median=media
 
 ###POPULATION OF 15 TO 64 YEAR-OLDS (%)
 ```{r}
-wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.15.64), median=median(pop.15.64), sd=sd(pop.15.64), max=max(pop.15.64),min=min(pop.15.64))
+wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.15.64), median=median(pop.15.64), 
+                                        sd=sd(pop.15.64),max=max(pop.15.64),min=min(pop.15.64))
 ```
-Looking at these two tables we can note almost 70% of population in China and Russia are 15 to 64 years old. In the other hand, 34% of population in India and South Africa are 0 to 14 years old.
+Looking at these two tables we note that almost 70% (on average) of the population in China and Russia have been represented by the 15 to 64 years olds. On the other hand, 34% of population (on average) in India and South Africa have been composed of the 0 to 14 years olds.<br><br>
+The two tables help us get a sense of the dynamism of age group changes in time for each of the 5 countries. These tell us that China, Brazil and Russia have experience the greatest changes in this respect with the 15 to 64 years olds achieving a representation of as much as 74% in China, 72% in Russia and 68% in Brazil while children (of 0 to 14 year old) have represented as low as 17% (China), 14% (Russia) and 24% (Brazil). This would indicate that birth rates have been widely varied between 1992 and 2011 in these countries.<br><br>
+Despite the fact that population growth did not help us better understand GDP or GDP growth, now that we have dug into age group ratios we can see that the shifts these groups have suffered seem consistent with the variability in GDP that China, India and Brazil have exhibited. We suspect that these changes might be correlated as economic health and security can foster the decision to start a family and have kids whereas a shrinking size of the working-capable population can negatively impact that same economic health of a country. These two factors can act as push and pull forces on a country's GDP. Let's take a look at how the total population for these countries have changed in time.
 
 ###POPULATION TOTAL
 ```{r}
-wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.total), median=median(pop.total), sd=sd(pop.total), max=max(pop.total),min=min(pop.total))
+wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.total), median=median(pop.total), 
+                                      sd=sd(pop.total), max=max(pop.total), min=min(pop.total))
 ```
-BRICS countries are interesting because they have a significant population and are emerging economies. China and India are the two most populous countries in the world. Brazil is 5th and Russia 9th. [6]
+As emerging economies, BRICS countries garner a significant population. China and India have represented the two most populous countries in the world with Brazil being the 5th and Russia 9th [6]. The table shows that despite the fact that China has been the most populated country, on average between 1992 and 2011, India has had the biggest change in sheer numbers. India is considered to be rapidly catching up with China in this regard, possibly as soon as 2022 [8]
 
 ###RURAL POPULATION(%)
 ```{r}
-wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.rural), median=median(pop.rural), sd=sd(pop.rural), max=max(pop.rural),min=min(pop.rural))
+wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.rural), median=median(pop.rural), 
+                                        sd=sd(pop.rural), max=max(pop.rural),min=min(pop.rural))
 ```
-
-By observing min and max values we can see how China has the biggest change on rural population which matches the numbers of urban population below. Many Chinese people moved from rural areas to urban areas.
 
 ###URBAN POPULATION(%)
 ```{r}
-wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.urban), median=median(pop.urban), sd=sd(pop.urban), max=max(pop.urban),min=min(pop.urban))
+wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.urban), median=median(pop.urban), 
+                                        sd=sd(pop.urban), max=max(pop.urban),min=min(pop.urban))
 ```
+By observing the minimum and maximum values for the ratio for rural population we can see how China has the biggest change which complements the numbers on urban population. This enourmous change ( a standard deviation of 7 percentage points) is likely due to the fact that many Chinese people have decided to move from rural areas to urban areas. [9]
 
 ###POPULATION DENSITY
 ```{r}
-wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.density), median=median(pop.density), sd=sd(pop.density), max=max(pop.density),min=min(pop.density))
+wdi.df %>% group_by(country.code) %>% summarise(avg=mean(pop.density),
+      median=median(pop.density), sd=sd(pop.density), max=max(pop.density),min=min(pop.density))
 ```
 
-India, followed by China, are the countries with the highest population density.
+India, followed by China, are the countries with the highest population density. However, India has a staggering population density on average compared to China (more than double). This could be explained by the fact that China is much larger geographically and possibly because China's population growth seems to be happening at a much leaner rate than that of India's which has created data points for population desnity in the last few years that have brought the average up.
 
-###OTHER SUMMARIES
+##Quartile Analysis
 
-What countries have had the biggest (top quartile) GOP growth and in which years? :
+What are the countries that have had the biggest (top quartile) GDP growth and when? :
 ```{r}
 wdi.df %>% filter(., GDP.growth.q == 'Q4') %>% select(., country.code, year, GDP.growth, GDP) %>% as.data.frame
 ```
 
-China has been in the top quantile most of the years (not in 1998, 1999, 2001). India started showing up recently and Russia was at the top quantile in 2000 and 2007.
+China has been in the top quantile in most of the years present in our data (except for 1998, 1999 and 2001). India started pushing their GDP Growth numbers up recently and Russia has been in the top quantile in 2000 and 2007.
 
-What countries and in which years have had urban population in the top quartile? :
+What countries have had ratios of urban population in the top quartile and when? :
 ```{r}
 wdi.df %>% filter(., pop.urban.q == 'Q4') %>% select(., country.code, year, pop.urban, pop.urban.q, pop.rural, pop.rural.q) %>% as.data.frame
 ```
 
-As we can see Brazil has been on top of urban population for all 20 years, whereas Russia entered the top quartile after 2007. 
+As we can see Brazil has dominated the chart for ratio of urban population in all 20 years that we are studying, whereas Russia entered the top quartile after 2007. 
 
-
-##References
-[1] Investopedia, http://www.investopedia.com/articles/03/042303.asp<br>
-[2] Population Reference Bureau, http://www.prb.org/Publications/Articles/2002/HowManyPeopleHaveEverLivedonEarth.aspx <br>
-[3] BRICS (Wikipedia), https://en.wikipedia.org/wiki/BRICS <br>
-[4] INTERNATIONAL ENERGY OUTLOOK 2016, https://www.eia.gov/forecasts/ieo/emissions.cfm <br>
-[5] What China's Economic Growth Figures Mean, http://www.nytimes.com/2016/07/15/business/international/china-gdp-economic-growth.html?_r=0 <br>
-[6] World Population 2015, United Nations, https://esa.un.org/unpd/wpp/Publications/Files/World_Population_2015_Wallchart.pdf <br>
+#REFERENCES
+[1] Investopedia, <br>http://www.investopedia.com/articles/03/042303.asp<br>
+[2] Population Reference Bureau,<br> http://www.prb.org/Publications/Articles/2002/HowManyPeopleHaveEverLivedonEarth.aspx <br>
+[3] BRICS (Wikipedia),<br> https://en.wikipedia.org/wiki/BRICS <br>
+[4] INTERNATIONAL ENERGY OUTLOOK 2016,<br> https://www.eia.gov/forecasts/ieo/emissions.cfm <br>
+[5] What China's Economic Growth Figures Mean,<br> http://www.nytimes.com/2016/07/15/business/international/china-gdp-economic-growth.html?_r=0 <br>
+[6] World Population 2015, United Nations,<br> https://esa.un.org/unpd/wpp/Publications/Files/World_Population_2015_Wallchart.pdf <br>
+[7] Industrial Emissions in the United States,<br> http://www.c2es.org/energy/use/industrial
+[8] This country will have more people than China by 2022,<br> http://money.cnn.com/2015/07/30/news/economy/india-china-population/<br>
+[9] Urbanization in China<br>
+https://en.wikipedia.org/wiki/Urbanization_in_China
 
