@@ -27,10 +27,11 @@ The organization focuses on delivering measurable results and in order to do tha
 
 #OBJECTIVES
 The world has seen some major shifts in the landscapes of politics, economy and society in the past 10 to 20 years. From the tragic events of September 11 in 2001 and the financial crisis of 2008 to the increasing gap in income equality and the rise of the internet as a universal digital medium, the world that has rebuilt after the second World War is anything if not a dynamic one. Social-economic interconnections (also known as economic globalization) has allowed for these changes to more easily scatter and disseminate all over the world.<br><br>
-Forces of change such as the ones presented so far are, however, unexpected and hard to predict. However, if there is one force of world change that has been relatively consistent since the beginning of mankind it would have to be population growth. Data from the Population Reference Bureau [2] has attempted to model an answer for the question "How many people have ever lived on Earth?" and started by mapping out the human population (as a best estimate) at a few checkpoint moments throughout human history as can be seen below.
+Forces of change such as the ones presented so far are unexpected and hard to predict. However, if there is one force of world change that has been relatively consistent since the beginning of mankind it would have to be population growth. Data from the Population Reference Bureau [2] has attempted to model an answer for the question "How many people have ever lived on Earth?" and started by mapping out the human population (as a best estimate) at a few checkpoint moments throughout human history as can be seen below.
 
 ```{r, echo=FALSE}
-setwd("C:/Users/Ross DeWitt/Documents/GitHub/MA799_Project1/world_population")
+#setwd("C:/Users/Ross DeWitt/Documents/GitHub/MA799_Project1/world_population")
+setwd("C:/Users/carrai1/Desktop/Master/MA402_Data_Science/Assigment_1/")
 read.csv('Data/popdata.csv', header=TRUE)
 ```
 <i>The first column represents the year, the second column represent the estimated population on Earth at that point in time, the third column represents the estimate number of births per one thousand people, the fourth column  represents the number of births between the current in-line year and the previous benchmark point.</i><br>
@@ -92,10 +93,10 @@ To get the final data set we create a script that does the following:
 
 * Reads the `CSV` files of all the 11 indicators
 * Renames variables
-* Converts year into a column
+* Converts year and value of the indicator into a column
 * Concatenates all 11 indicators into one `data.frame` which makes it easier to check for missing values
 * Selects specific years and countries
-* Checks for missing values
+
 
 First we load the `WDI`, `readr` and `dplyr` libraries:
 ```{r, message=FALSE, warning=FALSE}
@@ -115,7 +116,6 @@ Next, each one of the indicators of interest are read into their respective data
 # disable scientific notation. Easiear to read
 options(scipen=999)
 # Read each one fo the indicators into a data frame from the downloaded CSV files (remove manuall first 3 lines of cvs)
-#setwd("C:/Users/carrai1/Desktop/Master/MA402_Data_Science/Assigment_1/")
 pop0.df = read_csv("./data/%_population_0_14_60_15.csv")
 pop15.df = read_csv("./data/%_population_15_64_60_15.csv")
 poprur.df= read_csv("./data/%_rural_population_60_15.csv")
@@ -129,12 +129,12 @@ gdp_growth.df= read_csv("./data/GDP_growth_annual%.csv")
 gdp.df= read_csv("./data/GDP.csv")
 ```
 
-All data frames are now put into a list.
+All data frames are now put into a list to be able to loop the list and concatenate the indicators:
 ```{r}
 all.list <- list(pop0.df,pop15.df,poprur.df,popur.df,co2.df,kmsqr.df,
                  popgrowth.df,poptotal.df,energy.df,gdp_growth.df,gdp.df)
 ```
-We create a `data.frame` called `wdi.df`. Then we loop every indicator-specific data frame and continue to:
+We create a `data.frame` called `wdi.df` and we loop every indicator-specific data frame to:
 
 * Rename columns
 * Use function `gather` to set `year` and `value` of the indicator into a column. This will facilitate exploring missing values.
@@ -163,7 +163,16 @@ wdi.df$year = factor(wdi.df$year, ordered=TRUE)
 wdi.df <- filter(wdi.df, year!="X61")
 wdi.df <- filter(wdi.df, country.code!="INX")
 ```
-We select our 5 countries of interest (Brazil, Russia, India, China, South Africa) . We then select 2 complete decades (1992 -2011) to craft a data frame without missing values:
+
+At this point we check the data set for missing values based on `year`. We show the code but not the output due to its length and many iterations. After the reseach we find that the years from 1992 to 2011 don't have missing values for our countries of interest:
+
+```{r,eval=FALSE}
+# Display the years sorted by the percent of missing values for all measurements for that year
+wdi.df %>%  group_by(year) %>%  summarize(count=n(), cnt.missing=sum(is.na(value)), pct.missing= 100*cnt.missing/count) %>% 
+  arrange(year) %>%  select(year, pct.missing) %>%   print(n=100)
+```
+
+We select our 5 countries of interest (Brazil, Russia, India, China, South Africa) . We then select the 2 complete decades (1992 -2011) mentioned before to craft a data frame without missing values:
 
 ```{r}
 #select 5 countries of interest (https://en.wikipedia.org/wiki/BRICS) and years 1992/2011 (2 decades/20 years) 
@@ -171,12 +180,12 @@ wdi.df %>% filter(. , country.code %in% c("BRA","CHN","IND","RUS","ZAF")) -> wdi
 wdi.df <- filter(wdi.df, year>1991 & year<2012)
 ```
 
-In order to facilitate analysis we create a data frame where indicator values are found per column. This is the process:
+In order to facilitate analysis we create a data frame where indicator values are found in columns. This is the process we follow:
 
 * Drop columns that are not needed
 * Refactor columns to account for removal of some levels in our filtering and cleaning process
-* Transform data frame with indicator values per column
-* Rename indicators to a more descriptive name
+* Transform data frame to have indicator values as columns 
+* Rename indicators to a more descriptive name 
 
 ```{r}
 drops=c('country.name','indicator.name') # drop columns we don't need
@@ -184,7 +193,7 @@ wdi.df = wdi.df[ , !(names(wdi.df) %in% drops)]
 wdi.df$country.code = factor(wdi.df$country.code) #refactor
 wdi.df$year = factor(wdi.df$year, ordered=TRUE) #refactor
 wdi.df$indicator.code = factor(wdi.df$indicator.code, ordered=TRUE) #refactor
-wdi.df$value <- as.numeric(wdi.df$value) #column value to numberic
+wdi.df$value <- as.numeric(wdi.df$value) #column value to numeric
 
 #transform data frame to have a column for each indicator
 wdi.df %>% spread(., indicator.code, value) -> wdi.df
@@ -204,7 +213,7 @@ wdi.df %>% rename(. , surface.km2 =AG.SRF.TOTL.K2,
 ) -> wdi.df
 ```
 
-One way that the "surface area" variable could be of better use to our analysis would be to convert it to population density, as can be seen below.
+The "surface area" variable could be of better use to our analysis if we convert it to population density:
 
 ```{r}
 #create new indicator POPULATION DENSITY = POPULATION TOTAL/TOTAL COUNTRY SURFACE
@@ -212,9 +221,9 @@ wdi.df %>% mutate(., pop.density = pop.total / surface.km2) -> wdi.df
 wdi.df$surface.km2 <- NULL
 ```
 
-Next, we generate quantiles for each indicator and store it in a different indicator with the same name and a `.q` at the end it. The quantiles will be used for our second part of data analysis:
+Next, we generate quantiles for each indicator and store it in a different indicator column with the same name and a `.q` at the end it. The quantiles will be used for our second part of data analysis:
 ```{r}
-#get quantiles for all indicators and usen the name of the column + .q
+#get quantiles for all indicators and use the name of the column + .q to store them
 make.ntiles = function (inputvar, n) { 
   inputvar %>%
     quantile(., 
@@ -342,6 +351,13 @@ wdi.df %>% filter(., GDP.growth.q == 'Q4') %>% select(., country.code, year, GDP
 ```
 
 China has been in the top quantile in most of the years present in our data (except for 1998, 1999 and 2001). India started pushing their GDP Growth numbers up recently and Russia has been in the top quantile in 2000 and 2007.
+
+What are the countries that have had the lowest GDP growth and when? :
+```{r}
+wdi.df %>% filter(., GDP.growth.q == 'Q1') %>% select(., country.code, year, GDP.growth, GDP) %>% as.data.frame
+```
+
+Brazil, Russia, and South Africa had some years where their GDP growth was very low (within BRICS) but what stands out are the high negative values in Russia between 1992 and 1994 and also in 2009.
 
 What countries have had ratios of urban population in the top quartile and when? :
 ```{r}
