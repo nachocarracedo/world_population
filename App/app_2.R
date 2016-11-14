@@ -17,7 +17,7 @@ tab1explanation = "Select a country and an indicator to see a summary of the ind
 tab2explanation = "Select a pair of indicators to see a scatter plot of both, this will show how they relate. A correlation heatmap of all indicators it's also shown"
 #tab3explanation
 
-setwd("C:/Users/carrai1/Desktop/Master/MA402_Data_Science/assigment_2/")
+setwd("C:/Users/carrai1/Desktop/Master/MA402_Data_Science/assigment_1/")
 wb.df = read.csv("./data/wdi.df.csv")
 indicator.codes = c("pop.density", "energy.use", "co2.emission", "GDP", "GDP.growth","pop.0.14", "pop.15.64", "pop.growth", "pop.total" , "pop.rural" ,"pop.urban")
 dots <- lapply(indicator.codes, as.symbol)

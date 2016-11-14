@@ -12,7 +12,7 @@ library(tidyr)
 # disable scientific notation. Easiear to read
 options(scipen=999)
 # Read each one fo the indicators into a data frame from the downloaded CSV files (remove manuall first 3 lines of cvs)
-setwd("C:/Users/carrai1/Desktop/Master/MA402_Data_Science/assigment_2/")
+setwd("C:/Users/carrai1/Desktop/Master/MA402_Data_Science/assigment_1/")
 pop0.df = read_csv("./data/%_population_0_14_60_15.csv")
 pop15.df = read_csv("./data/%_population_15_64_60_15.csv")
 poprur.df= read_csv("./data/%_rural_population_60_15.csv")
