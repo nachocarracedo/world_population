@@ -19,17 +19,23 @@ tab2explanation = "Select a pair of indicators to see a scatter plot of both, th
 
 setwd("C:/Users/carrai1/Desktop/Master/MA402_Data_Science/assigment_2/")
 wb.df = read.csv("./data/wdi.df.csv")
-indicator.codes = as.factor(c("pop.density", "energy.use", "co2.emission", "GDP", "GDP.growth","pop.0.14", "pop.15.64", "pop.growth", "pop.total" , "pop.rural" ,"pop.urban"))
+indicator.codes = c("pop.density", "energy.use", "co2.emission", "GDP", "GDP.growth","pop.0.14", "pop.15.64", "pop.growth", "pop.total" , "pop.rural" ,"pop.urban")
+dots <- lapply(indicator.codes, as.symbol)
+#indicator.codes2 = c(pop.density, energy.use, co2.emission, GDP, GDP.growth,pop.0.14, pop.15.64, pop.growth, pop.total, pop.rural ,pop.urban)
 
-correlation <- round(cor(select(wb.df, indicator.codes)), 3)
+correlation <- round(cor(select(wb.df, one_of(indicator.codes))), 3)
 # Store the sorted list of country country codes
 wb.df %>% rename(. , country = country.code) -> wb.df
-wb.df$country <- wb.df$country
+#wb.df$country <- wb.df$country
 country.codes = sort(unique(wb.df$country))
 
-index <- country
-values <- c("Brazil", "China", "India", "Russia", "South Africa")
-wb.df$country.names <- values[match(wb.df$country, index)]
+# Create column country.names with countries complete names
+mapdf <- data.frame(old=c("BRA", "CHN", "IND", "RUS", "ZAF"),new=c("Brazil", "China", "India", "Russia", "South Africa"))
+wb.df$country.names <- mapdf$new[match(wb.df$country,mapdf$old)]
+
+
+country.names = sort(unique(wb.df$country.names))
+
 
 # Create the UI element
 ui <- 
@@ -62,8 +68,8 @@ ui <-
                 fluidRow(
                   box(width=12, background="blue", title="Exploring indivudual Indicators",tab1explanation),
                   box(width=12, selectInput("first_country", "Choose one or more countries: ", 
-                                            multiple=TRUE, selected="BRA",
-                                            choices=country.codes)), 
+                                            multiple=FALSE, selected="Brazil",
+                                            choices=country.names)), 
                   box(width=12, selectInput("first_indicator", "Choose one or more indicators: ", 
                                             multiple=FALSE, selected="co2.emission",
                                             choices=indicator.codes)),
@@ -101,9 +107,9 @@ server <- function(input, output) {
   
   output$avg_by_country <- renderTable({ 
     wb.df %>%
-      filter(country %in% input$first_country) %>% 
+      filter(country.names==(input$first_country)) %>% 
       group_by(country) %>%
-      summarise(avg=mean(indicator.codes %in% input$first_indicator), sd=sd(indicator.codes %in% input$first_indicator), max=max(indicator.codes %in% input$first_indicator),min=min(indicator.codes %in% input$first_indicator))
+      summarise(avg=mean(quote(indicator.codes %in% input$first_indicator)))#, sd=sd(indicator.codes %in% input$first_indicator), max=max(input$first_indicator))
   }, align='c', bordered=TRUE)
   
   
