@@ -1,10 +1,11 @@
+## app.R ##
 library(shinydashboard)
 library(wbstats)
 library(magrittr)
 library(dplyr)
 library(tidyr)
-library(ggplot2)
 library(plotly)
+library(ggplot2)
 
 intro = "Write intro here"
 topics="This is a test Write topics here 
@@ -123,20 +124,33 @@ server <- function(input, output) {
   })
   
   
-  output$world_map <- renderPlotly({
-    # You might also try a different summarize function
-    wb.df %>%
-      group_by(country.names) %>%
-      mutate_(chosen_ic="co2.emission") %>%
-      summarize(avg=mean(chosen_ic, na.rm=TRUE)) %>% 
-      plot_ly(.,
-              type         ="choropleth", 
-              locationmode ='ISO-3',
-              locations    =~country.names,
-              text         =~country.names, 
-              z            =~avg) 
-  })
   
+  
+  output$world_map <- renderPlotly({
+    wb.df %>%
+      group_by(.,country) %>%
+      mutate_(chosen_ic=input$first_indicator) %>%
+      summarize(avg=mean(chosen_ic, na.rm=TRUE)) -> aa
+    
+    l <- list(color = toRGB("grey"), width = 0.5)
+  
+    g <- list(
+      showframe = FALSE,
+      showcoastlines = TRUE,
+      projection = list(type = 'Mercator')
+    )
+    
+    plot_geo(aa, locationmode ='ISO-3') %>%
+      add_trace(
+        z = ~avg, color = ~avg, colors = 'Blues',
+        text = ~country, locations = ~country, marker = list(line = l)
+      )  %>%
+      colorbar(title = input$first_indicator, tickprefix = '') %>%
+      layout(
+        title = paste('World map -',input$first_indicator),
+        geo = g
+      )
+  })
   
   output$scatter_plot <- renderPlotly({
     x.vec = wb.df[,input$first_indicator_scatter]
