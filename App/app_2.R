@@ -7,18 +7,30 @@ library(tidyr)
 library(plotly)
 library(ggplot2)
 
-intro = "Write intro here"
-topics="This is a test Write topics here 
-and here and here, etc"
-objective = "This is a test Write objective here 
-and here and here, etc"
+intro = "The World Bank is an international organization that aims to defeat poverty in the world (specifically in countries with low to medium income) through means of training, development and loan offerings to countries so that they may "help countries help themselves".
+The organization focuses on delivering measurable results and in order to do that it leads a powerful initiative for open development and access to information. This consists of access to tools and data that spans over more than 50 years for macroeconomic and microeconomic factors for countries from all over the globe."
+
+topics=" This application shows how Brazil, Russia, India, China and South Africa (BRICS countries) have changed along the years based on information from The World Bank. 
+It focuses mainly on BRICS countries' population. In doing this, it attemps to answer the following questions:
+(i) What are the countries that present consistent positive GDP growth in the past years? Which countries have not been as succesful?; 
+
+(ii) what are the countries with the highest CO2 Emissions? Which ones are on their way to efficient use of energy?; 
+
+(iii) how does the population of 0 to 14 year olds vary against the population aged between 15 and 64? How do populations metrics shift?; 
+
+(iv) how do the two age groups affect the country's economic well-being?; 
+
+(v) how does population density look in these countries?"
+
+objective = "The goal of this application is to provide an easy way to show information regarding population growth in BRICS contries and analyze how this growth changes along with variables such as CO2 emissions and energy use as well as taking a glimpse into the evolution of such factors through time. 
+We have chosen to study the BRICS countries because in an effort to reveal possible connections in the data, these countries present highly dynamic changes and a shifting landscape that can help shed a light on the questions we look to answer. If any set of countries can make connections clearer, it would have to be the BRICS."
 
 
 tab1explanation = "Select a country and an indicator to see a summary of the indicator for that country. Also, select an indicator to check its histogram, you can also select the number of bins of the histogram."
 tab2explanation = "Select a pair of indicators to see a scatter plot of both, this will show how they relate. A correlation heatmap of all indicators it's also shown"
 #tab3explanation
 
-setwd("C:/Users/carrai1/Desktop/Master/MA402_Data_Science/assigment_1/")
+#setwd("C:/Users/carrai1/Desktop/Master/MA402_Data_Science/assigment_1/")
 wb.df = read.csv("./data/wdi.df.csv")
 indicator.codes = c("pop.density", "energy.use", "co2.emission", "GDP", "GDP.growth","pop.0.14", "pop.15.64", "pop.growth", "pop.total" , "pop.rural" ,"pop.urban")
 dots <- lapply(indicator.codes, as.symbol)
@@ -67,18 +79,18 @@ ui <-
         # Tab content for "first_tab"
         tabItem(tabName="first_tab",
                 fluidRow(
-                  box(width=12, background="blue", title="Exploring indivudual Indicators",tab1explanation),
-                  box(width=12, selectInput("first_country", "Choose one or more countries: ", 
+                  box(width=12, background="blue", title="Exploring indivudual Indicators by BRICS country",tab1explanation),
+                  box(width=12, selectInput("first_country", "Choose one BRICS country: ", 
                                             multiple=FALSE, selected="Brazil",
                                             choices=country.names)), 
-                  box(width=12, selectInput("first_indicator", "Choose one or more indicators: ", 
+                  box(width=12, selectInput("first_indicator", "Choose one indicator: ", 
                                             multiple=FALSE, selected="co2.emission",
                                             choices=indicator.codes)),
                   box(width=12, sliderInput("obs", "Size of bin (histogram):",  
                                             min = 1, max = 500, value = 2)),
-                  box(width=12, tableOutput("avg_by_country")),
-                  box(width=12, plotlyOutput("ic_histogram")),
-                  box(width=12, plotlyOutput("world_map"))
+                  box(width=12, title="Indicator average for the selected BRICS country", tableOutput("avg_by_country")),
+                  box(width=12, title="Histogram", plotlyOutput("ic_histogram")),
+                  box(width=12, title="This map shows information for all BRICS countries", plotlyOutput("world_map"))
                 )
         ),
         
@@ -89,11 +101,11 @@ ui <-
                   box(width=12, selectInput("first_indicator_scatter", "Choose one indicator:", 
                                             multiple=FALSE, selected="energy.use",
                                             choices=indicator.codes)),
-                  box(width=12, selectInput("second_indicator_scatter", "Choose other indicator:", 
+                  box(width=12, selectInput("second_indicator_scatter", "Choose a second indicator:", 
                                             multiple=FALSE, selected="co2.emission",
                                             choices=indicator.codes)),
                   box(width=12, plotlyOutput("scatter_plot")),
-                  box(width=12, plotlyOutput("cor_heat"))
+                  box(width=12, title="Correlation between indicators", plotlyOutput("cor_heat"))
                   
                 )
         )
