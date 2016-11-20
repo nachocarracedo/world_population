@@ -10,7 +10,7 @@ library(ggplot2)
 intro = "The World Bank is an international organization that aims to defeat poverty in the world (specifically in countries with low to medium income) through means of training, development and loan offerings to countries so that they may "help countries help themselves".
 The organization focuses on delivering measurable results and in order to do that it leads a powerful initiative for open development and access to information. This consists of access to tools and data that spans over more than 50 years for macroeconomic and microeconomic factors for countries from all over the globe."
 
-topics=" This application shows how Brazil, Russia, India, China and South Africa (BRICS countries) have changed along the years based on information from The World Bank. 
+topics=" This application shows how Brazil, Russia, India, China and South Africa (BRICS countries) have changed along the years based on information from The World Bank. BRICS countries are the top five emerging economies in the world.  
 It focuses mainly on BRICS countries' population. In doing this, it attemps to answer the following questions:
 (i) What are the countries that present consistent positive GDP growth in the past years? Which countries have not been as succesful?; 
 
